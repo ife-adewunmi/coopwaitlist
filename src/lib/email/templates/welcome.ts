@@ -5,7 +5,7 @@ interface WelcomeTemplateProps {
 
 export function welcomeTemplate({ recipientName, recipientEmail }: WelcomeTemplateProps) {
   return {
-    subject: "Welcome to Financial Growth Cooperative!",
+    subject: 'Welcome to Financial Growth Cooperative!',
     text: `
 Hello ${recipientName},
 
@@ -65,4 +65,3 @@ Financial Growth Cooperative Team
     `,
   }
 }
-

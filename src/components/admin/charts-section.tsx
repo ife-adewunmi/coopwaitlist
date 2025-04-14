@@ -1,5 +1,5 @@
-"use client"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+'use client'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   BarChart,
   Bar,
@@ -14,10 +14,9 @@ import {
   Legend,
   LineChart,
   Line,
-} from "recharts"
-import { motion } from "framer-motion"
-import { Registration } from "@/lib/types/registration"
-
+} from 'recharts'
+import { motion } from 'framer-motion'
+import { Registration } from '@/lib/types/registration'
 
 interface ChartsSectionProps {
   registrations: Registration[]
@@ -26,18 +25,18 @@ interface ChartsSectionProps {
 export function ChartsSection({ registrations }: ChartsSectionProps) {
   // Prepare data for age distribution chart
   const ageDistribution = [
-    { name: "18-24", count: 0 },
-    { name: "25-34", count: 0 },
-    { name: "35-44", count: 0 },
-    { name: "45-54", count: 0 },
-    { name: "55+", count: 0 },
+    { name: '18-24', count: 0 },
+    { name: '25-34', count: 0 },
+    { name: '35-44', count: 0 },
+    { name: '45-54', count: 0 },
+    { name: '55+', count: 0 },
   ]
 
   // Prepare data for gender distribution
   const genderDistribution = [
-    { name: "Male", count: 0 },
-    { name: "Female", count: 0 },
-    { name: "Other", count: 0 },
+    { name: 'Male', count: 0 },
+    { name: 'Female', count: 0 },
+    { name: 'Other', count: 0 },
   ]
 
   // Prepare data for state distribution
@@ -45,23 +44,23 @@ export function ChartsSection({ registrations }: ChartsSectionProps) {
 
   // Prepare data for financial goals
   const financialGoalDistribution = [
-    { name: "Business", value: 0 },
-    { name: "Savings", value: 0 },
-    { name: "Education", value: 0 },
+    { name: 'Business', value: 0 },
+    { name: 'Savings', value: 0 },
+    { name: 'Education', value: 0 },
   ]
 
   // Prepare data for current focus
   const currentFocusDistribution = [
-    { name: "Savings & Investments", value: 0 },
-    { name: "Mentorship & Support", value: 0 },
-    { name: "Strategic Opportunities", value: 0 },
+    { name: 'Savings & Investments', value: 0 },
+    { name: 'Mentorship & Support', value: 0 },
+    { name: 'Strategic Opportunities', value: 0 },
   ]
 
   // Prepare data for decision values
   const decisionValueDistribution = [
-    { name: "Speed", value: 0 },
-    { name: "Quality", value: 0 },
-    { name: "Cost", value: 0 },
+    { name: 'Speed', value: 0 },
+    { name: 'Quality', value: 0 },
+    { name: 'Cost', value: 0 },
   ]
 
   registrations.forEach((reg) => {
@@ -72,11 +71,11 @@ export function ChartsSection({ registrations }: ChartsSectionProps) {
     }
 
     // Count genders
-    if (reg.gender === "male") {
+    if (reg.gender === 'male') {
       genderDistribution[0].count += 1
-    } else if (reg.gender === "female") {
+    } else if (reg.gender === 'female') {
       genderDistribution[1].count += 1
-    } else if (reg.gender === "other") {
+    } else if (reg.gender === 'other') {
       genderDistribution[2].count += 1
     }
 
@@ -86,29 +85,29 @@ export function ChartsSection({ registrations }: ChartsSectionProps) {
     }
 
     // Count financial goals
-    if (reg.financialGoal === "business") {
+    if (reg.financialGoal === 'business') {
       financialGoalDistribution[0].value += 1
-    } else if (reg.financialGoal === "savings") {
+    } else if (reg.financialGoal === 'savings') {
       financialGoalDistribution[1].value += 1
-    } else if (reg.financialGoal === "education") {
+    } else if (reg.financialGoal === 'education') {
       financialGoalDistribution[2].value += 1
     }
 
     // Count current focus
-    if (reg.currentFocus === "savings") {
+    if (reg.currentFocus === 'savings') {
       currentFocusDistribution[0].value += 1
-    } else if (reg.currentFocus === "support") {
+    } else if (reg.currentFocus === 'support') {
       currentFocusDistribution[1].value += 1
-    } else if (reg.currentFocus === "opportunities") {
+    } else if (reg.currentFocus === 'opportunities') {
       currentFocusDistribution[2].value += 1
     }
 
     // Count decision values
-    if (reg.decisionValue === "speed") {
+    if (reg.decisionValue === 'speed') {
       decisionValueDistribution[0].value += 1
-    } else if (reg.decisionValue === "quality") {
+    } else if (reg.decisionValue === 'quality') {
       decisionValueDistribution[1].value += 1
-    } else if (reg.decisionValue === "cost") {
+    } else if (reg.decisionValue === 'cost') {
       decisionValueDistribution[2].value += 1
     }
   })
@@ -134,7 +133,16 @@ export function ChartsSection({ registrations }: ChartsSectionProps) {
     }))
 
   // Colors for charts
-  const COLORS = ["#00875A", "#0A6EBD", "#F59E0B", "#EF4444", "#8884D8", "#10B981", "#3B82F6", "#B45309"]
+  const COLORS = [
+    '#00875A',
+    '#0A6EBD',
+    '#F59E0B',
+    '#EF4444',
+    '#8884D8',
+    '#10B981',
+    '#3B82F6',
+    '#B45309',
+  ]
 
   // Format the pie chart data for better display
   const formattedAgeData = ageDistribution.filter((item) => item.count > 0)
@@ -146,7 +154,7 @@ export function ChartsSection({ registrations }: ChartsSectionProps) {
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-background p-3 border rounded-md shadow-md">
+        <div className="rounded-md border bg-background p-3 shadow-md">
           <p className="font-medium">{`${label}`}</p>
           <p className="text-primary">{`${payload[0].name}: ${payload[0].value}`}</p>
         </div>
@@ -157,7 +165,11 @@ export function ChartsSection({ registrations }: ChartsSectionProps) {
 
   return (
     <div className="grid gap-6 md:grid-cols-2">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <Card>
           <CardHeader className="pb-2">
             <CardTitle>Age Distribution</CardTitle>
@@ -340,7 +352,11 @@ export function ChartsSection({ registrations }: ChartsSectionProps) {
           <CardContent>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={stateData} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                <BarChart
+                  data={stateData}
+                  layout="vertical"
+                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                >
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis type="number" />
                   <YAxis dataKey="name" type="category" width={80} />

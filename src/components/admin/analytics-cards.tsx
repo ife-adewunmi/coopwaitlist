@@ -1,7 +1,7 @@
-"use client"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Users, MapPin, User, Calendar, TrendingUp, Target } from "lucide-react"
-import { motion } from "framer-motion"
+'use client'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Users, MapPin, User, Calendar, TrendingUp, Target } from 'lucide-react'
+import { motion } from 'framer-motion'
 
 interface Registration {
   name: string
@@ -25,11 +25,11 @@ interface AnalyticsCardsProps {
 export function AnalyticsCards({ registrations }: AnalyticsCardsProps) {
   // Prepare data for age distribution
   const ageDistribution = [
-    { name: "18-24", count: 0 },
-    { name: "25-34", count: 0 },
-    { name: "35-44", count: 0 },
-    { name: "45-54", count: 0 },
-    { name: "55+", count: 0 },
+    { name: '18-24', count: 0 },
+    { name: '25-34', count: 0 },
+    { name: '35-44', count: 0 },
+    { name: '45-54', count: 0 },
+    { name: '55+', count: 0 },
   ]
 
   // Gender distribution
@@ -97,10 +97,13 @@ export function AnalyticsCards({ registrations }: AnalyticsCardsProps) {
   })
 
   // Find most common age group
-  const mostCommonAgeGroup = ageDistribution.reduce((prev, current) => (prev.count > current.count ? prev : current), {
-    name: "None",
-    count: 0,
-  })
+  const mostCommonAgeGroup = ageDistribution.reduce(
+    (prev, current) => (prev.count > current.count ? prev : current),
+    {
+      name: 'None',
+      count: 0,
+    },
+  )
 
   // Calculate percentage
   const agePercentage = Math.round((mostCommonAgeGroup.count / (registrations.length || 1)) * 100)
@@ -108,7 +111,7 @@ export function AnalyticsCards({ registrations }: AnalyticsCardsProps) {
   // Find most common state
   const mostCommonState = Object.entries(stateCounts).reduce(
     (prev, [state, count]) => (count > prev.count ? { state, count } : prev),
-    { state: "None", count: 0 },
+    { state: 'None', count: 0 },
   )
 
   // Calculate gender percentages
@@ -119,77 +122,83 @@ export function AnalyticsCards({ registrations }: AnalyticsCardsProps) {
   // Find most common financial goal
   const mostCommonGoal = Object.entries(financialGoalCounts).reduce(
     (prev, [goal, count]) => (count > prev.count ? { goal, count } : prev),
-    { goal: "None", count: 0 },
+    { goal: 'None', count: 0 },
   )
 
   // Find most common current focus
   const mostCommonFocus = Object.entries(currentFocusCounts).reduce(
     (prev, [focus, count]) => (count > prev.count ? { focus, count } : prev),
-    { focus: "None", count: 0 },
+    { focus: 'None', count: 0 },
   )
 
   // Get latest registration
   const latestRegistration =
     registrations.length > 0
-      ? registrations.sort((a, b) => new Date(b.registrationDate).getTime() - new Date(a.registrationDate).getTime())[0]
+      ? registrations.sort(
+          (a, b) => new Date(b.registrationDate).getTime() - new Date(a.registrationDate).getTime(),
+        )[0]
       : null
 
   const cards = [
     {
-      title: "Total Registrations",
+      title: 'Total Registrations',
       value: registrations.length.toString(),
       icon: <Users className="h-5 w-5 text-primary" />,
-      description: "People on waitlist",
+      description: 'People on waitlist',
     },
     {
-      title: "Gender Distribution",
+      title: 'Gender Distribution',
       value: `${malePercentage}% / ${femalePercentage}%`,
       icon: <User className="h-5 w-5 text-secondary" />,
-      description: "Male / Female",
+      description: 'Male / Female',
     },
     {
-      title: "Most Common Age",
+      title: 'Most Common Age',
       value: mostCommonAgeGroup.name,
       icon: <Users className="h-5 w-5 text-accent" />,
       description: `${agePercentage}% of registrations`,
     },
     {
-      title: "Top Location",
+      title: 'Top Location',
       value:
-        mostCommonState.state !== "None"
+        mostCommonState.state !== 'None'
           ? mostCommonState.state.charAt(0).toUpperCase() + mostCommonState.state.slice(1)
-          : "None",
+          : 'None',
       icon: <MapPin className="h-5 w-5 text-primary" />,
       description: `${mostCommonState.count} registrations`,
     },
     {
-      title: "Latest Registration",
-      value: latestRegistration ? new Date(latestRegistration.registrationDate).toLocaleDateString() : "No data",
+      title: 'Latest Registration',
+      value: latestRegistration
+        ? new Date(latestRegistration.registrationDate).toLocaleDateString()
+        : 'No data',
       icon: <Calendar className="h-5 w-5 text-secondary" />,
-      description: latestRegistration ? new Date(latestRegistration.registrationDate).toLocaleTimeString() : "",
+      description: latestRegistration
+        ? new Date(latestRegistration.registrationDate).toLocaleTimeString()
+        : '',
     },
     {
-      title: "Top Financial Goal",
+      title: 'Top Financial Goal',
       value:
-        mostCommonGoal.goal !== "None"
+        mostCommonGoal.goal !== 'None'
           ? mostCommonGoal.goal.charAt(0).toUpperCase() + mostCommonGoal.goal.slice(1)
-          : "None",
+          : 'None',
       icon: <TrendingUp className="h-5 w-5 text-accent" />,
       description: `${mostCommonGoal.count} registrations`,
     },
     {
-      title: "Primary Focus",
+      title: 'Primary Focus',
       value:
-        mostCommonFocus.focus !== "None"
+        mostCommonFocus.focus !== 'None'
           ? mostCommonFocus.focus.charAt(0).toUpperCase() + mostCommonFocus.focus.slice(1)
-          : "None",
+          : 'None',
       icon: <Target className="h-5 w-5 text-primary" />,
       description: `${mostCommonFocus.count} registrations`,
     },
   ]
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
+    <div className="mb-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {cards.map((card, index) => (
         <motion.div
           key={index}

@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server"
-import { clearAuthCookie } from "@/lib/auth"
+import { NextResponse } from 'next/server'
+import { clearAuthCookie } from '@/lib/auth'
 
 export async function POST() {
   try {
@@ -8,16 +8,15 @@ export async function POST() {
 
     return NextResponse.json({
       success: true,
-      message: "Logged out successfully",
+      message: 'Logged out successfully',
     })
   } catch (error) {
-    console.error("Error logging out:", error)
+    console.error('Error logging out:', error)
     return NextResponse.json(
       {
-        error: "Failed to log out",
+        error: 'Failed to log out',
       },
       { status: 500 },
     )
   }
 }
-

@@ -1,9 +1,9 @@
-"use client"
-import Link from "next/link"
-import { Shield, Mail, Phone, MapPin, ExternalLink } from "lucide-react"
-import { motion } from "framer-motion"
-import { siteConfig, contactInfo, footerSections, socialLinks } from "@/data/site-config"
-import { Button } from "@/components/ui/button"
+'use client'
+import Link from 'next/link'
+import { Shield, Mail, Phone, MapPin, ExternalLink } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { siteConfig, contactInfo, footerSections, socialLinks } from '@/data/site-config'
+import { Button } from '@/components/ui/button'
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
@@ -11,34 +11,34 @@ export function Footer() {
   return (
     <footer className="bg-primary-600 text-white">
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-8">
+        <div className="mb-8 grid grid-cols-1 gap-8 md:grid-cols-12">
           {/* Brand column */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="md:col-span-4 flex flex-col"
+            className="flex flex-col md:col-span-4"
           >
-            <div className="flex items-center gap-2 mb-4">
+            <div className="mb-4 flex items-center gap-2">
               <Shield className="h-6 w-6" />
               <h3 className="text-xl font-bold">{siteConfig.name}</h3>
             </div>
-            <p className="text-white/80 mb-6">
-              Empowering individuals and communities through collective growth, support, and prosperity. Together, we
-              build financial freedom.
+            <p className="mb-6 text-white/80">
+              Empowering individuals and communities through collective growth, support, and
+              prosperity. Together, we build financial freedom.
             </p>
-            <div className="flex gap-4 mt-auto">
+            <div className="mt-auto flex gap-4">
               {socialLinks.map((link) => (
                 <Link
                   key={link.platform}
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-white/80 hover:text-white transition-colors"
+                  className="text-white/80 transition-colors hover:text-white"
                 >
                   <span className="sr-only">{link.platform}</span>
-                  {link.platform === "Twitter" && (
+                  {link.platform === 'Twitter' && (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="20"
@@ -53,7 +53,7 @@ export function Footer() {
                       <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
                     </svg>
                   )}
-                  {link.platform === "Instagram" && (
+                  {link.platform === 'Instagram' && (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="20"
@@ -70,7 +70,7 @@ export function Footer() {
                       <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
                     </svg>
                   )}
-                  {link.platform === "LinkedIn" && (
+                  {link.platform === 'LinkedIn' && (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="20"
@@ -87,7 +87,7 @@ export function Footer() {
                       <circle cx="4" cy="4" r="2"></circle>
                     </svg>
                   )}
-                  {link.platform === "Facebook" && (
+                  {link.platform === 'Facebook' && (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="20"
@@ -117,14 +117,14 @@ export function Footer() {
               transition={{ duration: 0.5, delay: 0.1 * (index + 1) }}
               className="md:col-span-2"
             >
-              <h3 className="text-lg font-semibold mb-4">{section.title}</h3>
+              <h3 className="mb-4 text-lg font-semibold">{section.title}</h3>
               <ul className="space-y-2 text-white/80">
                 {section.links.map((link) => (
                   <li key={link.title}>
                     <Link
                       href={link.href}
-                      className="hover:text-white transition-colors flex items-center gap-1"
-                      {...(link?.href ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                      className="flex items-center gap-1 transition-colors hover:text-white"
+                      {...(link?.href ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                     >
                       {link.title}
                       {link?.href && <ExternalLink className="h-3 w-3" />}
@@ -143,7 +143,7 @@ export function Footer() {
             transition={{ duration: 0.5, delay: 0.4 }}
             className="md:col-span-2"
           >
-            <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
+            <h3 className="mb-4 text-lg font-semibold">Contact Us</h3>
             <ul className="space-y-3 text-white/80">
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4 flex-shrink-0" />
@@ -168,7 +168,7 @@ export function Footer() {
           <p className="text-sm text-white/60">
             &copy; {currentYear} {siteConfig.name}. All rights reserved.
           </p>
-          <p className="text-xs mt-2 text-white/40">A project by {siteConfig.organizationName}</p>
+          <p className="mt-2 text-xs text-white/40">A project by {siteConfig.organizationName}</p>
         </div>
       </div>
     </footer>

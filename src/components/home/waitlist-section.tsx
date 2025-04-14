@@ -1,10 +1,10 @@
-"use client"
-import { useState } from "react"
-import { motion } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { WaitlistFormModal } from "./waitlist-form-modal"
-import { homeContent } from "@/data/home-content"
-import { ArrowRight } from "lucide-react"
+'use client'
+import { useState } from 'react'
+import { motion } from 'framer-motion'
+import { Button } from '@/components/ui/button'
+import { WaitlistFormModal } from './waitlist-form-modal'
+import { homeContent } from '@/data/home-content'
+import { ArrowRight } from 'lucide-react'
 
 export function WaitlistSection() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -18,11 +18,15 @@ export function WaitlistSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="max-w-3xl mx-auto text-center"
+          className="mx-auto max-w-3xl text-center"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-6">{waitlistTitle}</h2>
-          <p className="text-lg mb-8 text-muted-foreground">{waitlistDescription}</p>
-          <Button size="lg" onClick={() => setIsModalOpen(true)} className="bg-primary hover:bg-primary-700 text-white">
+          <h2 className="mb-6 text-3xl font-bold text-primary md:text-4xl">{waitlistTitle}</h2>
+          <p className="mb-8 text-lg text-muted-foreground">{waitlistDescription}</p>
+          <Button
+            size="lg"
+            onClick={() => setIsModalOpen(true)}
+            className="bg-primary text-white hover:bg-primary-700"
+          >
             Join Our Waitlist
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
@@ -33,4 +37,3 @@ export function WaitlistSection() {
     </section>
   )
 }
-

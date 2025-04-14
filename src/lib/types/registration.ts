@@ -23,4 +23,3 @@ export interface RegistrationQuestions {
 }
 
 export type Registration = RegistrationBase & RegistrationQuestions
-

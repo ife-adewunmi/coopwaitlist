@@ -13,7 +13,7 @@ export function notificationTemplate({
   actionText,
   actionLink,
 }: NotificationTemplateProps) {
-  const actionButton = actionText && actionLink ? `\n\n${actionText}: ${actionLink}` : ""
+  const actionButton = actionText && actionLink ? `\n\n${actionText}: ${actionLink}` : ''
 
   return {
     subject,
@@ -47,7 +47,7 @@ Financial Growth Cooperative Team
     </div>
     <p>Hello ${recipientName},</p>
     <p>${message}</p>
-    ${actionText && actionLink ? `<p><a href="${actionLink}" class="button">${actionText}</a></p>` : ""}
+    ${actionText && actionLink ? `<p><a href="${actionLink}" class="button">${actionText}</a></p>` : ''}
     <div class="footer">
       <p>Best regards,<br>Financial Growth Cooperative Team</p>
     </div>
@@ -57,4 +57,3 @@ Financial Growth Cooperative Team
     `,
   }
 }
-

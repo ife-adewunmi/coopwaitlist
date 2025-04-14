@@ -1,78 +1,98 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
-import { useDispatch } from "react-redux"
-import { addRegistration } from "@/state/slices/registrations/registrationsSlice"
-import { useToast } from "@/hooks/use-toast"
-import { Button } from "@/components/ui/button"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Loader2, AlertCircle, Shield } from "lucide-react"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Modal, ModalContent, ModalHeader, ModalTitle, ModalDescription } from "@/components/ui/modal"
-import { FullScreenModal, FullScreenModalContent } from "@/components/ui/full-screen-modal"
-import { Questionnaire } from "./questionnaire/questionnaire"
-import type { RegistrationQuestions } from "@/lib/types/registration"
-import { homeContent } from "@/data/home-content"
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { useDispatch } from 'react-redux'
+import { addRegistration } from '@/state/slices/registrations/registrationsSlice'
+import { useToast } from '@/hooks/use-toast'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Loader2, AlertCircle, Shield } from 'lucide-react'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalTitle,
+  ModalDescription,
+} from '@/components/ui/modal'
+import { FullScreenModal, FullScreenModalContent } from '@/components/ui/full-screen-modal'
+import { Questionnaire } from './questionnaire/questionnaire'
+import type { RegistrationQuestions } from '@/lib/types/registration'
+import { homeContent } from '@/data/home-content'
 
 // Nigerian states
 const NIGERIAN_STATES = [
-  "Abia",
-  "Adamawa",
-  "Akwa Ibom",
-  "Anambra",
-  "Bauchi",
-  "Bayelsa",
-  "Benue",
-  "Borno",
-  "Cross River",
-  "Delta",
-  "Ebonyi",
-  "Edo",
-  "Ekiti",
-  "Enugu",
-  "FCT",
-  "Gombe",
-  "Imo",
-  "Jigawa",
-  "Kaduna",
-  "Kano",
-  "Katsina",
-  "Kebbi",
-  "Kogi",
-  "Kwara",
-  "Lagos",
-  "Nasarawa",
-  "Niger",
-  "Ogun",
-  "Ondo",
-  "Osun",
-  "Oyo",
-  "Plateau",
-  "Rivers",
-  "Sokoto",
-  "Taraba",
-  "Yobe",
-  "Zamfara",
+  'Abia',
+  'Adamawa',
+  'Akwa Ibom',
+  'Anambra',
+  'Bauchi',
+  'Bayelsa',
+  'Benue',
+  'Borno',
+  'Cross River',
+  'Delta',
+  'Ebonyi',
+  'Edo',
+  'Ekiti',
+  'Enugu',
+  'FCT',
+  'Gombe',
+  'Imo',
+  'Jigawa',
+  'Kaduna',
+  'Kano',
+  'Katsina',
+  'Kebbi',
+  'Kogi',
+  'Kwara',
+  'Lagos',
+  'Nasarawa',
+  'Niger',
+  'Ogun',
+  'Ondo',
+  'Osun',
+  'Oyo',
+  'Plateau',
+  'Rivers',
+  'Sokoto',
+  'Taraba',
+  'Yobe',
+  'Zamfara',
 ]
 
 // Form validation schema
 const formSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
-  email: z.string().email({ message: "Please enter a valid email address." }),
-  whatsapp: z.string().min(11, { message: "Please enter a valid phone number." }),
-  gender: z.enum(["male", "female", "other"], {
-    required_error: "Please select your gender.",
+  name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
+  email: z.string().email({ message: 'Please enter a valid email address.' }),
+  whatsapp: z.string().min(11, { message: 'Please enter a valid phone number.' }),
+  gender: z.enum(['male', 'female', 'other'], {
+    required_error: 'Please select your gender.',
   }),
-  ageBracket: z.string({ required_error: "Please select your age bracket." }),
-  state: z.string({ required_error: "Please select your state." }),
-  city: z.string().min(2, { message: "Please enter your city." }),
-  occupation: z.string().min(2, { message: "Please enter your occupation." }),
+  ageBracket: z.string({ required_error: 'Please select your age bracket.' }),
+  state: z.string({ required_error: 'Please select your state.' }),
+  city: z.string().min(2, { message: 'Please enter your city.' }),
+  occupation: z.string().min(2, { message: 'Please enter your occupation.' }),
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -94,14 +114,14 @@ export function WaitlistFormModal({ isOpen, onClose }: WaitlistFormModalProps) {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      whatsapp: "",
+      name: '',
+      email: '',
+      whatsapp: '',
       gender: undefined,
-      ageBracket: "",
-      state: "",
-      city: "",
-      occupation: "",
+      ageBracket: '',
+      state: '',
+      city: '',
+      occupation: '',
     },
   })
 
@@ -124,11 +144,11 @@ export function WaitlistFormModal({ isOpen, onClose }: WaitlistFormModalProps) {
       )
 
       // Save to JSON file via API with CSRF protection
-      const response = await fetch("/api/registrations", {
-        method: "POST",
+      const response = await fetch('/api/registrations', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-Token": csrfToken,
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken,
         },
         body: JSON.stringify({
           ...values,
@@ -149,15 +169,15 @@ export function WaitlistFormModal({ isOpen, onClose }: WaitlistFormModalProps) {
 
             // Special handling for duplicate email
             if (response.status === 409) {
-              form.setError("email", {
-                type: "manual",
-                message: "This email is already registered.",
+              form.setError('email', {
+                type: 'manual',
+                message: 'This email is already registered.',
               })
             }
           }
         } catch (jsonError) {
           // If we can't parse JSON, use the status text
-          console.error("Error parsing error response:", jsonError)
+          console.error('Error parsing error response:', jsonError)
         }
 
         throw new Error(errorMessage)
@@ -169,12 +189,12 @@ export function WaitlistFormModal({ isOpen, onClose }: WaitlistFormModalProps) {
       // Show questionnaire
       setShowQuestionnaire(true)
     } catch (error) {
-      console.error("Error submitting form:", error)
-      setFormError(error instanceof Error ? error.message : "An unexpected error occurred")
+      console.error('Error submitting form:', error)
+      setFormError(error instanceof Error ? error.message : 'An unexpected error occurred')
       toast({
-        title: "Registration Failed",
-        description: "There was an error submitting your registration. Please try again.",
-        variant: "destructive",
+        title: 'Registration Failed',
+        description: 'There was an error submitting your registration. Please try again.',
+        variant: 'destructive',
       })
       setIsSubmitting(false)
     }
@@ -193,7 +213,7 @@ export function WaitlistFormModal({ isOpen, onClose }: WaitlistFormModalProps) {
 
     // Show success toast
     toast({
-      title: "Registration Successful",
+      title: 'Registration Successful',
       description: "Thank you for joining our waitlist! We'll be in touch soon.",
     })
   }
@@ -211,11 +231,15 @@ export function WaitlistFormModal({ isOpen, onClose }: WaitlistFormModalProps) {
       <Modal open={isOpen && !showQuestionnaire} onOpenChange={handleClose}>
         <ModalContent className="max-w-2xl">
           <ModalHeader>
-            <ModalTitle className="text-2xl font-bold text-center">{homeContent.waitlistTitle}</ModalTitle>
-            <ModalDescription className="text-center">{homeContent.waitlistDescription}</ModalDescription>
+            <ModalTitle className="text-center text-2xl font-bold">
+              {homeContent.waitlistTitle}
+            </ModalTitle>
+            <ModalDescription className="text-center">
+              {homeContent.waitlistDescription}
+            </ModalDescription>
           </ModalHeader>
           <div className="p-6 pt-2">
-            <div className="flex justify-center mb-4">
+            <div className="mb-4 flex justify-center">
               <Shield className="h-8 w-8 text-primary" />
             </div>
 
@@ -228,7 +252,7 @@ export function WaitlistFormModal({ isOpen, onClose }: WaitlistFormModalProps) {
                   </Alert>
                 )}
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <FormField
                     control={form.control}
                     name="name"
@@ -252,14 +276,14 @@ export function WaitlistFormModal({ isOpen, onClose }: WaitlistFormModalProps) {
                         <FormControl>
                           <Input type="email" placeholder="your.email@example.com" {...field} />
                         </FormControl>
-                        <FormDescription>We'll never share your email with anyone else.</FormDescription>
+                        <FormDescription>{`We'll never share your email with anyone else.`}</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <FormField
                     control={form.control}
                     name="whatsapp"
@@ -312,7 +336,7 @@ export function WaitlistFormModal({ isOpen, onClose }: WaitlistFormModalProps) {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <FormField
                     control={form.control}
                     name="ageBracket"
@@ -364,7 +388,7 @@ export function WaitlistFormModal({ isOpen, onClose }: WaitlistFormModalProps) {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <FormField
                     control={form.control}
                     name="city"
@@ -402,14 +426,14 @@ export function WaitlistFormModal({ isOpen, onClose }: WaitlistFormModalProps) {
                         Submitting...
                       </>
                     ) : (
-                      "Join Waitlist"
+                      'Join Waitlist'
                     )}
                   </Button>
                 </div>
 
-                <div className="flex items-center justify-center mt-2 gap-2">
+                <div className="mt-2 flex items-center justify-center gap-2">
                   <Shield className="h-4 w-4 text-muted-foreground" />
-                  <p className="text-xs text-muted-foreground text-center">
+                  <p className="text-center text-xs text-muted-foreground">
                     Your data is encrypted and securely stored. We respect your privacy.
                   </p>
                 </div>
@@ -429,4 +453,3 @@ export function WaitlistFormModal({ isOpen, onClose }: WaitlistFormModalProps) {
     </>
   )
 }
-

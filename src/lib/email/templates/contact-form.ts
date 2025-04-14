@@ -9,7 +9,7 @@ export function contactFormTemplate({
   name,
   email,
   message,
-  subject = "Contact Form Submission",
+  subject = 'Contact Form Submission',
 }: ContactFormTemplateProps) {
   return {
     subject: `[Contact Form] ${subject}`,
@@ -52,7 +52,7 @@ ${message}
     </div>
     <div class="field">
       <div class="label">Message:</div>
-      <div class="message">${message.replace(/\n/g, "<br>")}</div>
+      <div class="message">${message.replace(/\n/g, '<br>')}</div>
     </div>
   </div>
 </body>
@@ -60,4 +60,3 @@ ${message}
     `,
   }
 }
-

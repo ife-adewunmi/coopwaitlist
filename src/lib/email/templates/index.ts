@@ -1,8 +1,8 @@
-import { magicLinkTemplate } from "./magic-link"
-import { welcomeTemplate } from "./welcome"
-import { contactFormTemplate } from "./contact-form"
-import { newsletterTemplate } from "./newsletter"
-import { notificationTemplate } from "./notification"
+import { magicLinkTemplate } from './magic-link'
+import { welcomeTemplate } from './welcome'
+import { contactFormTemplate } from './contact-form'
+import { newsletterTemplate } from './newsletter'
+import { notificationTemplate } from './notification'
 
 // Export all email templates
 export const emailTemplates = {
@@ -15,4 +15,3 @@ export const emailTemplates = {
 
 // Template type definition
 export type EmailTemplateType = keyof typeof emailTemplates
-

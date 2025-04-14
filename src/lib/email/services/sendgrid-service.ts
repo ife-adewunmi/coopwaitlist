@@ -1,5 +1,5 @@
-import type { EmailPayload } from "./index"
-import { EMAIL_CONFIG } from "../config"
+import type { EmailPayload } from './index'
+import { EMAIL_CONFIG } from '../config'
 
 // SendGrid email service
 export async function sendWithSendGrid(
@@ -8,11 +8,11 @@ export async function sendWithSendGrid(
   try {
     // Check if SendGrid API key is configured
     if (!EMAIL_CONFIG.service.sendgrid.apiKey) {
-      throw new Error("SendGrid API key is not configured")
+      throw new Error('SendGrid API key is not configured')
     }
 
     // Dynamic import to avoid loading SendGrid in environments where it's not used
-    const sgMail = await import("@sendgrid/mail")
+    const sgMail = await import('@sendgrid/mail')
     sgMail.default.setApiKey(EMAIL_CONFIG.service.sendgrid.apiKey)
 
     const msg = {
@@ -26,10 +26,13 @@ export async function sendWithSendGrid(
       html: payload.html,
       replyTo: payload.replyTo,
       attachments: payload.attachments?.map((attachment) => ({
-        content: typeof attachment.content === "string" ? attachment.content : attachment.content.toString("base64"),
+        content:
+          typeof attachment.content === 'string'
+            ? attachment.content
+            : attachment.content.toString('base64'),
         filename: attachment.filename,
         type: attachment.contentType,
-        disposition: "attachment",
+        disposition: 'attachment',
       })),
     }
 
@@ -37,15 +40,14 @@ export async function sendWithSendGrid(
 
     return {
       success: true,
-      message: "Email sent successfully with SendGrid",
+      message: 'Email sent successfully with SendGrid',
     }
   } catch (error) {
-    console.error("SendGrid error:", error)
+    console.error('SendGrid error:', error)
     return {
       success: false,
-      message: "Failed to send email with SendGrid",
+      message: 'Failed to send email with SendGrid',
       error,
     }
   }
 }
-

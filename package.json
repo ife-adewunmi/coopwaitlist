@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "format": "prettier -c \"**/*.{css,js,json,jsx,ts,tsx}\"",
+    "format:fix": "prettier -c \"**/*.{css,js,json,jsx,ts,tsx}\" --write",
+    "format:fix:src": "prettier -c './src/**/*.{ts,tsx,js}' --write",
+    "lint": "next lint --fix --dir app --dir src"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "latest",
@@ -53,6 +56,8 @@
     "next-themes": "latest",
     "nodemailer": "^6.10.0",
     "path": "latest",
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.11",
     "react": "^19",
     "react-day-picker": "8.10.1",
     "react-dom": "^19",

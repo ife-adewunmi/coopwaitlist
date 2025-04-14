@@ -1,5 +1,5 @@
-import { configureStore } from "@reduxjs/toolkit"
-import { registrationsReducer } from "@/state/slices/registrations"
+import { configureStore } from '@reduxjs/toolkit'
+import { registrationsReducer } from '@/state/slices/registrations'
 
 export const store = configureStore({
   reducer: {

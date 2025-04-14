@@ -1,9 +1,9 @@
-"use client"
+'use client'
 
-import type React from "react"
-import { createContext, useContext, useState, type ReactNode } from "react"
-import { RegistrationQuestions } from "@/lib/types/registration"
-import { questionnaireContent } from "@/data/questionnaire-content"
+import type React from 'react'
+import { createContext, useContext, useState, type ReactNode } from 'react'
+import { RegistrationQuestions } from '@/lib/types/registration'
+import { questionnaireContent } from '@/data/questionnaire-content'
 
 interface QuestionnaireContextType {
   step: number
@@ -72,7 +72,7 @@ export function QuestionnaireProvider({ children }: { children: ReactNode }) {
 export function useQuestionnaire() {
   const context = useContext(QuestionnaireContext)
   if (context === undefined) {
-    throw new Error("useQuestionnaire must be used within a QuestionnaireProvider")
+    throw new Error('useQuestionnaire must be used within a QuestionnaireProvider')
   }
   return context
 }

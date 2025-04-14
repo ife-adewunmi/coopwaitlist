@@ -1,10 +1,10 @@
-"use client"
+'use client'
 
-import type React from "react"
+import type React from 'react'
 
-import { Provider } from "react-redux"
-import { store } from "@/state/store"
-import { ThemeProvider } from "next-themes"
+import { Provider } from 'react-redux'
+import { store } from '@/state/store'
+import { ThemeProvider } from 'next-themes'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -15,4 +15,3 @@ export function Providers({ children }: { children: React.ReactNode }) {
     </Provider>
   )
 }
-

@@ -1,4 +1,4 @@
-import { formatDate } from "@/lib/utils"
+import { formatDate } from '@/lib/utils'
 
 interface MagicLinkTemplateProps {
   recipientName: string
@@ -10,7 +10,7 @@ export function magicLinkTemplate({ recipientName, magicLink, expiresAt }: Magic
   const expiryTime = formatDate(expiresAt)
 
   return {
-    subject: "Your Magic Link to Access Financial Growth Cooperative Admin",
+    subject: 'Your Magic Link to Access Financial Growth Cooperative Admin',
     text: `
 Hello ${recipientName},
 
@@ -63,4 +63,3 @@ Financial Growth Cooperative Team
     `,
   }
 }
-

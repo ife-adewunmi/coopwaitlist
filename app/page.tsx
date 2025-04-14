@@ -1,11 +1,11 @@
-import type { Metadata } from "next"
-import { Header } from "@/components/layout/header"
-import { Footer } from "@/components/layout/footer"
-import { HeroSection } from "@/components/home/hero-section"
-import { PurposeSection } from "@/components/home/purpose-section"
-import { WaitlistSection } from "@/components/home/waitlist-section"
-import { BenefitsSection } from "@/components/home/benefits-section"
-import { siteConfig } from "@/data/site-config"
+import type { Metadata } from 'next'
+import { Header } from '@/components/layout/header'
+import { Footer } from '@/components/layout/footer'
+import { HeroSection } from '@/components/home/hero-section'
+import { PurposeSection } from '@/components/home/purpose-section'
+import { WaitlistSection } from '@/components/home/waitlist-section'
+import { BenefitsSection } from '@/components/home/benefits-section'
+import { siteConfig } from '@/data/site-config'
 
 export const metadata: Metadata = {
   title: siteConfig.name,
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col">
+    <main className="flex min-h-screen flex-col">
       {/* Header */}
       <Header title={siteConfig.name} />
 

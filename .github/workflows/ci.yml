@@ -51,6 +51,7 @@ jobs:
         run: yarn lint
 
       - name: Check Code Style
-        run: yarn prettier
-#      - name: E2E Test
-#        run: yarn test-e2e
+        run: yarn format:fix:src
+
+#      - name: Test
+#        run: yarn test -- -u

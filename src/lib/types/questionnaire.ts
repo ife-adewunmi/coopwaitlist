@@ -21,4 +21,3 @@ export interface QuestionnaireContent {
   bonusDescription: string
   bonusButtonText: string
 }
-
