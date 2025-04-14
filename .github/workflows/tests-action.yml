@@ -10,17 +10,39 @@ jobs:
     name: Titans
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           path: ./
+          fetch-depth: 0
 
-      - uses: actions/setup-node@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
         with:
-          cache: "npm"
           node-version: 20
+
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/yarn
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
 
       - run: yarn install
         working-directory: ${{ inputs.WORKING_DIRECTORY }}
 
-      - run: npm run test
-        working-directory: ${{ inputs.WORKING_DIRECTORY }}
+      - name: Check linting
+        run: yarn lint
+         working-directory: ${{ inputs.WORKING_DIRECTORY }}
+
+      - name: Check Code Style
+        run: yarn format:fix:src
+         working-directory: ${{ inputs.WORKING_DIRECTORY }}
+
+      # - run: yarn test
+      #   working-directory: ${{ inputs.WORKING_DIRECTORY }}

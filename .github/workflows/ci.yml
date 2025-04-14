@@ -4,21 +4,21 @@ on:
     types: [ready_for_review]
 
 jobs:
-  log-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const output = `Test started by: @${{ github.actor }} on ${{ github.event_name }}`;
+  # log-tests:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/github-script@v7
+  #       with:
+  #         github-token: ${{ secrets.GITHUB_TOKEN }}
+  #         script: |
+  #           const output = `Test started by: @${{ github.actor }} on ${{ github.event_name }}`;
             
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: output
-            })
+  #           github.rest.issues.createComment({
+  #             issue_number: context.issue.number,
+  #             owner: context.repo.owner,
+  #             repo: context.repo.repo,
+  #             body: output
+  #           })
 
   tests-action:
     name: Test
