@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          result-encoding: string
           script: |
             const output = `Test started by: @${{ github.actor }} on ${{ github.event_name }}`;
             

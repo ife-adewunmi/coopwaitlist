@@ -38,11 +38,11 @@ jobs:
 
       - name: Check linting
         run: yarn lint
-         working-directory: ${{ inputs.WORKING_DIRECTORY }}
+        working-directory: ${{ inputs.WORKING_DIRECTORY }}
 
       - name: Check Code Style
         run: yarn format:fix:src
-         working-directory: ${{ inputs.WORKING_DIRECTORY }}
+        working-directory: ${{ inputs.WORKING_DIRECTORY }}
 
       # - run: yarn test
       #   working-directory: ${{ inputs.WORKING_DIRECTORY }}
