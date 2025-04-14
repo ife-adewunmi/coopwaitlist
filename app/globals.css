@@ -79,7 +79,9 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings:
+      'rlig' 1,
+      'calt' 1;
   }
 }
 
@@ -136,14 +138,14 @@
 
 /* Gradient text */
 .text-gradient {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-secondary-600;
+  @apply bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent;
 }
 
 /* Glass effect */
 .glass-effect {
-  @apply bg-white/10 backdrop-blur-md border border-white/20;
+  @apply border border-white/20 bg-white/10 backdrop-blur-md;
 }
 
 .dark .glass-effect {
-  @apply bg-black/10 backdrop-blur-md border border-white/10;
+  @apply border border-white/10 bg-black/10 backdrop-blur-md;
 }

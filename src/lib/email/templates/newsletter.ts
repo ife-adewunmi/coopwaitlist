@@ -13,7 +13,7 @@ export function newsletterTemplate({
   content,
   unsubscribeLink,
 }: NewsletterTemplateProps) {
-  const greeting = recipientName ? `Hello ${recipientName},` : "Hello,"
+  const greeting = recipientName ? `Hello ${recipientName},` : 'Hello,'
 
   return {
     subject,
@@ -63,4 +63,3 @@ Financial Growth Cooperative Team
     `,
   }
 }
-

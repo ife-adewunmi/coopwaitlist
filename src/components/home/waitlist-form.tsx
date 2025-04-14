@@ -1,77 +1,91 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
-import { useDispatch } from "react-redux"
-import { addRegistration } from "@/state/slices/registrations/registrationsSlice"
-import { useToast } from "@/hooks/use-toast"
-import { motion } from "framer-motion"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Loader2, AlertCircle, Shield } from "lucide-react"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Questionnaire } from "./questionnaire/questionnaire"
-import type { RegistrationQuestions } from "@/lib/types/registration"
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { useDispatch } from 'react-redux'
+import { addRegistration } from '@/state/slices/registrations/registrationsSlice'
+import { useToast } from '@/hooks/use-toast'
+import { motion } from 'framer-motion'
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Loader2, AlertCircle, Shield } from 'lucide-react'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Questionnaire } from './questionnaire/questionnaire'
+import type { RegistrationQuestions } from '@/lib/types/registration'
 
 // Nigerian states
 const NIGERIAN_STATES = [
-  "Abia",
-  "Adamawa",
-  "Akwa Ibom",
-  "Anambra",
-  "Bauchi",
-  "Bayelsa",
-  "Benue",
-  "Borno",
-  "Cross River",
-  "Delta",
-  "Ebonyi",
-  "Edo",
-  "Ekiti",
-  "Enugu",
-  "FCT",
-  "Gombe",
-  "Imo",
-  "Jigawa",
-  "Kaduna",
-  "Kano",
-  "Katsina",
-  "Kebbi",
-  "Kogi",
-  "Kwara",
-  "Lagos",
-  "Nasarawa",
-  "Niger",
-  "Ogun",
-  "Ondo",
-  "Osun",
-  "Oyo",
-  "Plateau",
-  "Rivers",
-  "Sokoto",
-  "Taraba",
-  "Yobe",
-  "Zamfara",
+  'Abia',
+  'Adamawa',
+  'Akwa Ibom',
+  'Anambra',
+  'Bauchi',
+  'Bayelsa',
+  'Benue',
+  'Borno',
+  'Cross River',
+  'Delta',
+  'Ebonyi',
+  'Edo',
+  'Ekiti',
+  'Enugu',
+  'FCT',
+  'Gombe',
+  'Imo',
+  'Jigawa',
+  'Kaduna',
+  'Kano',
+  'Katsina',
+  'Kebbi',
+  'Kogi',
+  'Kwara',
+  'Lagos',
+  'Nasarawa',
+  'Niger',
+  'Ogun',
+  'Ondo',
+  'Osun',
+  'Oyo',
+  'Plateau',
+  'Rivers',
+  'Sokoto',
+  'Taraba',
+  'Yobe',
+  'Zamfara',
 ]
 
 // Form validation schema
 const formSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
-  email: z.string().email({ message: "Please enter a valid email address." }),
-  whatsapp: z.string().min(11, { message: "Please enter a valid phone number." }),
-  gender: z.enum(["male", "female", "other"], {
-    required_error: "Please select your gender.",
+  name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
+  email: z.string().email({ message: 'Please enter a valid email address.' }),
+  whatsapp: z.string().min(11, { message: 'Please enter a valid phone number.' }),
+  gender: z.enum(['male', 'female', 'other'], {
+    required_error: 'Please select your gender.',
   }),
-  ageBracket: z.string({ required_error: "Please select your age bracket." }),
-  state: z.string({ required_error: "Please select your state." }),
-  city: z.string().min(2, { message: "Please enter your city." }),
-  occupation: z.string().min(2, { message: "Please enter your occupation." }),
+  ageBracket: z.string({ required_error: 'Please select your age bracket.' }),
+  state: z.string({ required_error: 'Please select your state.' }),
+  city: z.string().min(2, { message: 'Please enter your city.' }),
+  occupation: z.string().min(2, { message: 'Please enter your occupation.' }),
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -89,14 +103,14 @@ export function WaitlistForm() {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      whatsapp: "",
+      name: '',
+      email: '',
+      whatsapp: '',
       gender: undefined,
-      ageBracket: "",
-      state: "",
-      city: "",
-      occupation: "",
+      ageBracket: '',
+      state: '',
+      city: '',
+      occupation: '',
     },
   })
 
@@ -119,11 +133,11 @@ export function WaitlistForm() {
       )
 
       // Save to JSON file via API with CSRF protection
-      const response = await fetch("/api/registrations", {
-        method: "POST",
+      const response = await fetch('/api/registrations', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-Token": csrfToken,
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken,
         },
         body: JSON.stringify({
           ...values,
@@ -144,15 +158,15 @@ export function WaitlistForm() {
 
             // Special handling for duplicate email
             if (response.status === 409) {
-              form.setError("email", {
-                type: "manual",
-                message: "This email is already registered.",
+              form.setError('email', {
+                type: 'manual',
+                message: 'This email is already registered.',
               })
             }
           }
         } catch (jsonError) {
           // If we can't parse JSON, use the status text
-          console.error("Error parsing error response:", jsonError)
+          console.error('Error parsing error response:', jsonError)
         }
 
         throw new Error(errorMessage)
@@ -164,12 +178,12 @@ export function WaitlistForm() {
       // Show questionnaire
       setShowQuestionnaire(true)
     } catch (error) {
-      console.error("Error submitting form:", error)
-      setFormError(error instanceof Error ? error.message : "An unexpected error occurred")
+      console.error('Error submitting form:', error)
+      setFormError(error instanceof Error ? error.message : 'An unexpected error occurred')
       toast({
-        title: "Registration Failed",
-        description: "There was an error submitting your registration. Please try again.",
-        variant: "destructive",
+        title: 'Registration Failed',
+        description: 'There was an error submitting your registration. Please try again.',
+        variant: 'destructive',
       })
       setIsSubmitting(false)
     }
@@ -185,7 +199,7 @@ export function WaitlistForm() {
 
     // Show success toast
     toast({
-      title: "Registration Successful",
+      title: 'Registration Successful',
       description: "Thank you for joining our waitlist! We'll be in touch soon.",
     })
   }
@@ -198,14 +212,14 @@ export function WaitlistForm() {
       transition={{ duration: 0.5 }}
       className="w-full px-4 sm:px-6 md:px-8"
     >
-      <Card className="max-w-2xl mx-auto p-4 sm:p-6 shadow-lg border-2 border-border">
+      <Card className="mx-auto max-w-2xl border-2 border-border p-4 shadow-lg sm:p-6">
         <CardContent className="pt-4 sm:pt-6">
           {!showQuestionnaire && !formSuccess && (
             <>
-              <div className="flex justify-center mb-4 sm:mb-6">
-                <Shield className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
+              <div className="mb-4 flex justify-center sm:mb-6">
+                <Shield className="h-8 w-8 text-primary sm:h-10 sm:w-10" />
               </div>
-              <h3 className="text-2xl sm:text-3xl font-bold text-primary mb-4 sm:mb-6 text-center">
+              <h3 className="mb-4 text-center text-2xl font-bold text-primary sm:mb-6 sm:text-3xl">
                 Join Our Waitlist Today!
               </h3>
 
@@ -218,7 +232,7 @@ export function WaitlistForm() {
                     </Alert>
                   )}
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                  <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
                     <FormField
                       control={form.control}
                       name="name"
@@ -242,14 +256,14 @@ export function WaitlistForm() {
                           <FormControl>
                             <Input type="email" placeholder="your.email@example.com" {...field} />
                           </FormControl>
-                          <FormDescription>We'll never share your email with anyone else.</FormDescription>
+                          <FormDescription>{`We'll never share your email with anyone else.`}</FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                  <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
                     <FormField
                       control={form.control}
                       name="whatsapp"
@@ -302,7 +316,7 @@ export function WaitlistForm() {
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                  <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
                     <FormField
                       control={form.control}
                       name="ageBracket"
@@ -354,7 +368,7 @@ export function WaitlistForm() {
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                  <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
                     <FormField
                       control={form.control}
                       name="city"
@@ -392,14 +406,14 @@ export function WaitlistForm() {
                           Submitting...
                         </>
                       ) : (
-                        "Join Waitlist"
+                        'Join Waitlist'
                       )}
                     </Button>
                   </div>
 
-                  <div className="flex items-center justify-center mt-2 sm:mt-4 gap-2">
+                  <div className="mt-2 flex items-center justify-center gap-2 sm:mt-4">
                     <Shield className="h-4 w-4 text-muted-foreground" />
-                    <p className="text-xs text-muted-foreground text-center">
+                    <p className="text-center text-xs text-muted-foreground">
                       Your data is encrypted and securely stored. We respect your privacy.
                     </p>
                   </div>
@@ -408,16 +422,18 @@ export function WaitlistForm() {
             </>
           )}
 
-          {showQuestionnaire && !formSuccess && <Questionnaire onComplete={handleQuestionnaireComplete} />}
+          {showQuestionnaire && !formSuccess && (
+            <Questionnaire onComplete={handleQuestionnaireComplete} />
+          )}
 
           {formSuccess && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="bg-secondary/20 rounded-lg p-4 sm:p-6 text-center"
+              className="rounded-lg bg-secondary/20 p-4 text-center sm:p-6"
             >
-              <h4 className="text-xl font-semibold mb-2">Thank You for Registering!</h4>
-              <p className="mb-4">Your information has been securely saved. We'll be in touch soon.</p>
+              <h4 className="mb-2 text-xl font-semibold">Thank You for Registering!</h4>
+              <p className="mb-4">{`Your information has been securely saved. We'll be in touch soon.`}</p>
               <Button
                 onClick={() => {
                   setFormSuccess(false)

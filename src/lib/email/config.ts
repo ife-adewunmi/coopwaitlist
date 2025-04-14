@@ -2,17 +2,17 @@
 export const EMAIL_CONFIG = {
   // Default sender information
   defaultFrom: {
-    name: "Help Circle Cooperative",
-    email: "noreply@helpcircle.coop",
+    name: 'Help Circle Cooperative',
+    email: 'noreply@helpcircle.coop',
   },
 
   // Admin email for notifications
-  adminEmail: process.env.ADMIN_EMAIL || "admin@helpcircle.coop",
+  adminEmail: process.env.ADMIN_EMAIL || 'admin@helpcircle.coop',
 
   // Email service configuration
   service: {
     // You can switch between different email providers here
-    provider: process.env.EMAIL_PROVIDER || "console", // Options: "sendgrid", "mailgun", "smtp", "console"
+    provider: process.env.EMAIL_PROVIDER || 'console', // Options: "sendgrid", "mailgun", "smtp", "console"
 
     // SendGrid
     sendgrid: {
@@ -29,7 +29,7 @@ export const EMAIL_CONFIG = {
     smtp: {
       host: process.env.SMTP_HOST,
       port: process.env.SMTP_PORT ? Number.parseInt(process.env.SMTP_PORT) : 587,
-      secure: process.env.SMTP_SECURE === "true",
+      secure: process.env.SMTP_SECURE === 'true',
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
@@ -43,4 +43,3 @@ export const EMAIL_CONFIG = {
     maxPerDay: 200,
   },
 }
-

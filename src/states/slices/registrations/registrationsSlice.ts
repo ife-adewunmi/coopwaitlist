@@ -1,4 +1,4 @@
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit"
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 interface Registration {
   id?: string
@@ -22,7 +22,7 @@ const initialState: RegistrationsState = {
 }
 
 export const registrationsSlice = createSlice({
-  name: "registrations",
+  name: 'registrations',
   initialState,
   reducers: {
     addRegistration: (state, action: PayloadAction<Registration>) => {

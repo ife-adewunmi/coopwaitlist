@@ -1,8 +1,8 @@
-import { sendWithConsole } from "./console-service"
-import { sendWithSendGrid } from "./sendgrid-service"
-import { sendWithMailgun } from "./mailgun-service"
-import { sendWithSmtp } from "./smtp-service"
-import { EMAIL_CONFIG } from "../config"
+import { sendWithConsole } from './console-service'
+import { sendWithSendGrid } from './sendgrid-service'
+import { sendWithMailgun } from './mailgun-service'
+import { sendWithSmtp } from './smtp-service'
+import { EMAIL_CONFIG } from '../config'
 
 export interface EmailPayload {
   to: string | string[]
@@ -21,7 +21,9 @@ export interface EmailPayload {
   }>
 }
 
-export async function sendEmail(payload: EmailPayload): Promise<{ success: boolean; message?: string; error?: any }> {
+export async function sendEmail(
+  payload: EmailPayload,
+): Promise<{ success: boolean; message?: string; error?: any }> {
   try {
     // Set default from if not provided
     if (!payload.from) {
@@ -30,23 +32,22 @@ export async function sendEmail(payload: EmailPayload): Promise<{ success: boole
 
     // Choose the email service based on configuration
     switch (EMAIL_CONFIG.service.provider) {
-      case "sendgrid":
+      case 'sendgrid':
         return await sendWithSendGrid(payload)
-      case "mailgun":
+      case 'mailgun':
         return await sendWithMailgun(payload)
-      case "smtp":
+      case 'smtp':
         return await sendWithSmtp(payload)
-      case "console":
+      case 'console':
       default:
         return await sendWithConsole(payload)
     }
   } catch (error) {
-    console.error("Error sending email:", error)
+    console.error('Error sending email:', error)
     return {
       success: false,
-      message: "Failed to send email",
+      message: 'Failed to send email',
       error,
     }
   }
 }
-
