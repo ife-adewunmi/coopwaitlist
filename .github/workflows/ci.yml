@@ -19,9 +19,9 @@ jobs:
               body: output
             })
 
-  tests-titanic:
+  tests-action:
     name: Test
-    uses: ./.github/workflows/tests-titanic.yml
+    uses: ./.github/workflows/tests-action.yml
     with:
       WORKING_DIRECTORY: ./
     
