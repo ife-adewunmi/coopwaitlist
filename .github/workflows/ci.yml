@@ -4,7 +4,6 @@ on: [pull_request]
 
 jobs:
   run-ci:
-    name: TypeCheck & Linters
     runs-on: ubuntu-latest
 
     steps:
