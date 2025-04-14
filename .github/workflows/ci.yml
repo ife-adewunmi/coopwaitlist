@@ -1,56 +1,76 @@
-name: Check PR
-
-on: [pull_request]
+name: PR tests
+on:
+  pull_request:
+    types: [ready_for_review]
 
 jobs:
-  run-ci:
+  log-tests:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/github-script@v7
         with:
-          fetch-depth: 0
+          script: |
+            const output = `Test started by: @${{ github.actor }} on ${{ github.event_name }}`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
 
-      - name: Set up Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: lts/*
+  tests-titanic:
+    name: Test
+    uses: ./.github/workflows/tests-titanic.yml
+    with:
+      WORKING_DIRECTORY: ./
+    
 
-      - name: Cache node modules
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/yarn
-          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+    # steps:
+    #   - name: Checkout repository
+    #     uses: actions/checkout@v3
+    #     with:
+    #       fetch-depth: 0
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
+    #   - name: Set up Node
+    #     uses: actions/setup-node@v3
+    #     with:
+    #       node-version: lts/*
 
-      - uses: actions/cache@v3
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+    #   - name: Cache node modules
+    #     uses: actions/cache@v3
+    #     with:
+    #       path: ~/.cache/yarn
+    #       key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+    #       restore-keys: |
+    #         ${{ runner.os }}-node-
 
-      - name: Install dependencies
-        run: yarn install
+    #   - name: Get yarn cache directory path
+    #     id: yarn-cache-dir-path
+    #     run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
 
-      - name: Build app
-        run: yarn build
+    #   - uses: actions/cache@v3
+    #     id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+    #     with:
+    #       path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+    #       key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+    #       restore-keys: |
+    #         ${{ runner.os }}-yarn-
 
-      - name: Check types
-        run: yarn ts:check
+    #   - name: Install dependencies
+    #     run: yarn install
 
-      - name: Check linting
-        run: yarn lint
+    #   - name: Build app
+    #     run: yarn build
 
-      - name: Check Code Style
-        run: yarn format:fix:src
+    #   - name: Check types
+    #     run: yarn ts:check
+
+    #   - name: Check linting
+    #     run: yarn lint
+
+    #   - name: Check Code Style
+    #     run: yarn format:fix:src
 
 #      - name: Test
 #        run: yarn test -- -u

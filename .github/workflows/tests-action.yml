@@ -1,0 +1,26 @@
+on:
+  workflow_call:
+    inputs:
+      WORKING_DIRECTORY:
+        required: true
+        type: string
+
+jobs:
+  test:
+    name: Titans
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: ./
+
+      - uses: actions/setup-node@v4
+        with:
+          cache: "npm"
+          node-version: 20
+
+      - run: yarn install
+        working-directory: ${{ inputs.WORKING_DIRECTORY }}
+
+      - run: npm run test
+        working-directory: ${{ inputs.WORKING_DIRECTORY }}
