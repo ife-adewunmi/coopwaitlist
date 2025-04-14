@@ -54,7 +54,7 @@ export async function verifyMagicLinkToken(token: string): Promise<{ valid: bool
     }
 
     // Check if email is the admin email
-    if (decoded.email !== ADMIN_EMAIL) {
+    if ((!Array(ADMIN_EMAIL) && decoded.email !== ADMIN_EMAIL) || !ADMIN_EMAIL.includes(decoded.email)) {
       return { valid: false }
     }
 
