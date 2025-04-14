@@ -8,10 +8,11 @@ export enum NodeEnv {
 }
 
 export interface Config {
-  ADMIN_EMAIL: string;
+  ADMIN_EMAIL: string | Array<string>;
   APP_ENV: Environment;
   APP_URL: string;
   DATA_ENCRYPTION_KEY: string;
+  EMAIL_PROVIDER: string;
 }
 
 
@@ -22,18 +23,20 @@ export class EnvConfig {
         const nights = process.env.FROM_PRICE_NIGHTS || '0';
         return {
           APP_ENV: Environment.LOCAL,
-          ADMIN_EMAIL: process.env?.ADMIN_EMAIL || 'admin@example.com',
+          ADMIN_EMAIL: process.env.ADMIN_EMAIL ?  process.env.ADMIN_EMAIL.split(",") : 'admin@example.com',
           APP_URL: process.env?.APP_URL || '',
-          DATA_ENCRYPTION_KEY: process.env?.APP_VARIANT_ID || '',
+          DATA_ENCRYPTION_KEY: process.env?.DATA_ENCRYPTION_KEY || '',
+          EMAIL_PROVIDER: process.env?.EMAIL_PROVIDER || '',
         };
       }
     }
     const prConfig = getConfig()?.publicRuntimeConfig;
     return {
       APP_ENV: prConfig?.APP_ENV || '',
-      ADMIN_EMAIL: process.env?.ADMIN_EMAIL || 'admin@example.com',
+      ADMIN_EMAIL: prConfig.ADMIN_EMAIL ?  prConfig.ADMIN_EMAIL.split(",") : 'admin@example.com',
       APP_URL: prConfig?.APP_URL || '',
       DATA_ENCRYPTION_KEY: prConfig?.DATA_ENCRYPTION_KEY || '',
+      EMAIL_PROVIDER: prConfig?.EMAIL_PROVIDER || '',
     };
   }
 

@@ -2,30 +2,30 @@
 export const EMAIL_CONFIG = {
   // Default sender information
   defaultFrom: {
-    name: "Financial Growth Cooperative",
-    email: "noreply@financialgrowth.coop",
+    name: "Help Circle Cooperative",
+    email: "noreply@helpcircle.coop",
   },
 
   // Admin email for notifications
-  adminEmail: process.env.ADMIN_EMAIL || "admin@financialgrowth.coop",
+  adminEmail: process.env.ADMIN_EMAIL || "admin@helpcircle.coop",
 
   // Email service configuration
   service: {
     // You can switch between different email providers here
     provider: process.env.EMAIL_PROVIDER || "console", // Options: "sendgrid", "mailgun", "smtp", "console"
 
-    // SendGrid configuration
+    // SendGrid
     sendgrid: {
       apiKey: process.env.SENDGRID_API_KEY,
     },
 
-    // Mailgun configuration
+    // Mailgun
     mailgun: {
       apiKey: process.env.MAILGUN_API_KEY,
       domain: process.env.MAILGUN_DOMAIN,
     },
 
-    // SMTP configuration
+    // SMTP
     smtp: {
       host: process.env.SMTP_HOST,
       port: process.env.SMTP_PORT ? Number.parseInt(process.env.SMTP_PORT) : 587,

@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server"
 import { generateMagicLinkToken } from "@/lib/auth"
 import { ADMIN_EMAIL } from "@/lib/auth-constants"
-// import { sendMagicLinkEmail } from "@/lib/email"
+import { sendMagicLinkEmail } from "@/lib/email"
 
 export async function POST(request: Request) {
   try {
     const { email } = await request.json()
-
+    
     // Check if the email is the admin email
-    if (email !== ADMIN_EMAIL) {
+    if ((!Array(ADMIN_EMAIL) && email !== ADMIN_EMAIL) || !ADMIN_EMAIL.includes(email)) {
       // For security, don't reveal that this email isn't authorized
       // Instead, pretend we sent the email
       return NextResponse.json({
@@ -21,12 +21,12 @@ export async function POST(request: Request) {
     const token = await generateMagicLinkToken(email)
 
     // In a real app, you would send an email with the magic link
-    const magicLink = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/auth/verify?token=${token}`
+    const magicLink = `${process.env.APP_URL || "http://localhost:3000"}/api/auth/verify?token=${token}`
 
     // Send the magic link email
-    // await sendMagicLinkEmail("Admin", email, magicLink)
+    await sendMagicLinkEmail("Admin", email, magicLink)
 
-    console.log("Magic link for admin:", magicLink)
+    // console.log("Magic link for admin:", magicLink)
 
     return NextResponse.json({
       success: true,

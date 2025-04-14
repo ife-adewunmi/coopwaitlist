@@ -19,7 +19,7 @@ export async function sendWelcomeEmail(name: string, email: string) {
 
 export async function sendMagicLinkEmail(name: string, email: string, magicLink: string) {
   const expiresAt = new Date()
-  expiresAt.setMinutes(expiresAt.getMinutes() + 15) // 15 minutes from now
+  expiresAt.setMinutes(expiresAt.getMinutes() + 30) // 15 minutes from now
 
   const template = emailTemplates.magicLink({
     recipientName: name,
@@ -137,4 +137,5 @@ export async function sendTemplatedEmail(
 }
 
 // Export all email-related utilities
-export { sendEmail, EmailPayload, emailTemplates, EMAIL_CONFIG }
+export { sendEmail, emailTemplates, EMAIL_CONFIG }
+export type { EmailPayload }
