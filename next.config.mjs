@@ -21,6 +21,12 @@ const nextConfig = {
     parallelServerBuildTraces: true,
     parallelServerCompiles: true,
   },
+  publicRuntimeConfig: {
+    APP_ENV: process.env.APP_ENV,
+    ADMIN_EMAIL: process.env.ADMIN_EMAIL,
+    APP_URL: process.env.APP_URL,
+    DATA_ENCRYPTION_KEY: process.env.DATA_ENCRYPTION_KEY,
+  }
 }
 
 mergeConfig(nextConfig, userConfig)
