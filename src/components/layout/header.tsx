@@ -1,13 +1,13 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { ThemeToggle } from "@/components/theme-toggle"
-import { Shield, Menu, X } from "lucide-react"
-import { SimpleEncryptionStatus } from "@/components/security/simple-encryption-status"
-import { motion, AnimatePresence } from "framer-motion"
-import { siteConfig } from "@/data/site-config"
+import { useState } from 'react'
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import { ThemeToggle } from '@/components/theme-toggle'
+import { Shield, Menu, X } from 'lucide-react'
+import { SimpleEncryptionStatus } from '@/components/security/simple-encryption-status'
+import { motion, AnimatePresence } from 'framer-motion'
+import { siteConfig } from '@/data/site-config'
 
 interface HeaderProps {
   title: string
@@ -26,22 +26,31 @@ export function Header({ title }: HeaderProps) {
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center gap-2">
             <Shield className="h-6 w-6 text-primary" />
-            <h1 className="hidden font-bold text-xl sm:inline-block">{siteConfig.name}</h1>
+            <h1 className="hidden text-xl font-bold sm:inline-block">{siteConfig.name}</h1>
           </Link>
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6">
-          <Link href="#features" className="text-sm font-medium hover:text-primary transition-colors">
+        <nav className="hidden items-center gap-6 md:flex">
+          <Link
+            href="#features"
+            className="text-sm font-medium transition-colors hover:text-primary"
+          >
             Features
           </Link>
-          <Link href="#benefits" className="text-sm font-medium hover:text-primary transition-colors">
+          <Link
+            href="#benefits"
+            className="text-sm font-medium transition-colors hover:text-primary"
+          >
             Benefits
           </Link>
-          <Link href="#about" className="text-sm font-medium hover:text-primary transition-colors">
+          <Link href="#about" className="text-sm font-medium transition-colors hover:text-primary">
             About
           </Link>
-          <Link href="#contact" className="text-sm font-medium hover:text-primary transition-colors">
+          <Link
+            href="#contact"
+            className="text-sm font-medium transition-colors hover:text-primary"
+          >
             Contact
           </Link>
         </nav>
@@ -59,7 +68,7 @@ export function Header({ title }: HeaderProps) {
             size="icon"
             className="md:hidden"
             onClick={toggleMobileMenu}
-            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
           >
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
@@ -76,41 +85,41 @@ export function Header({ title }: HeaderProps) {
         {mobileMenuOpen && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
+            animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden border-t overflow-hidden"
+            className="overflow-hidden border-t md:hidden"
           >
-            <div className="container py-4 flex flex-col gap-4">
+            <div className="container flex flex-col gap-4 py-4">
               <Link
                 href="#features"
-                className="px-2 py-2 text-sm hover:bg-muted rounded-md"
+                className="rounded-md px-2 py-2 text-sm hover:bg-muted"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Features
               </Link>
               <Link
                 href="#benefits"
-                className="px-2 py-2 text-sm hover:bg-muted rounded-md"
+                className="rounded-md px-2 py-2 text-sm hover:bg-muted"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Benefits
               </Link>
               <Link
                 href="#about"
-                className="px-2 py-2 text-sm hover:bg-muted rounded-md"
+                className="rounded-md px-2 py-2 text-sm hover:bg-muted"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 About
               </Link>
               <Link
                 href="#contact"
-                className="px-2 py-2 text-sm hover:bg-muted rounded-md"
+                className="rounded-md px-2 py-2 text-sm hover:bg-muted"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Contact
               </Link>
-              <Button asChild className="w-full mt-2">
+              <Button asChild className="mt-2 w-full">
                 <Link href="#waitlist" onClick={() => setMobileMenuOpen(false)}>
                   Join Waitlist
                 </Link>

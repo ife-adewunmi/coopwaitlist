@@ -1,4 +1,4 @@
-import { UrlObject } from "node:url"
+import { UrlObject } from 'node:url'
 
 export interface HeroContent {
   headline: string
@@ -33,4 +33,4 @@ export interface HomeContent {
   waitlistDescription: string
 }
 
-type Url = string | UrlObject;
+type Url = string | UrlObject

@@ -1,0 +1,30 @@
+name: PR tests
+on:
+  pull_request:
+    types: [ready_for_review]
+
+jobs:
+  log-tests:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+            const output = `Test started by: @${{ github.actor }} on ${{ github.event_name }}`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
+
+  tests-action:
+    name: Test
+    uses: ./.github/workflows/tests-action.yml
+    with:
+      WORKING_DIRECTORY: ./

@@ -1,6 +1,6 @@
-import { sendEmail, EmailPayload } from "./services"
-import { emailTemplates, type EmailTemplateType } from "./templates"
-import { EMAIL_CONFIG } from "./config"
+import { sendEmail, EmailPayload } from './services'
+import { emailTemplates, type EmailTemplateType } from './templates'
+import { EMAIL_CONFIG } from './config'
 
 // Email utility functions
 export async function sendWelcomeEmail(name: string, email: string) {
@@ -35,7 +35,12 @@ export async function sendMagicLinkEmail(name: string, email: string, magicLink:
   })
 }
 
-export async function sendContactFormEmail(name: string, email: string, message: string, subject?: string) {
+export async function sendContactFormEmail(
+  name: string,
+  email: string,
+  message: string,
+  subject?: string,
+) {
   const template = emailTemplates.contactForm({
     name,
     email,

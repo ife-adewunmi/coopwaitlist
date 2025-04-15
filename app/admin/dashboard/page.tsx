@@ -1,7 +1,7 @@
-import { Suspense } from "react"
-import AuthCheck from "./auth-check"
-import AdminDashboardClient from "./client"
-import { Loader2 } from "lucide-react"
+import { Suspense } from 'react'
+import AuthCheck from './auth-check'
+import AdminDashboardClient from './client'
+import { Loader2 } from 'lucide-react'
 
 export default function AdminDashboardPage() {
   return (
@@ -24,4 +24,3 @@ export default function AdminDashboardPage() {
     </>
   )
 }
-

@@ -1,26 +1,26 @@
-"use client"
-import { motion } from "framer-motion"
-import { CheckCircle } from "lucide-react"
-import { homeContent } from "@/data/home-content"
+'use client'
+import { motion } from 'framer-motion'
+import { CheckCircle } from 'lucide-react'
+import { homeContent } from '@/data/home-content'
 
 export function BenefitsSection() {
   const { benefitsTitle, benefitsDescription, benefits } = homeContent
 
   return (
-    <section id="benefits" className="py-20 bg-muted/50">
+    <section id="benefits" className="bg-muted/50 py-20">
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-12"
+          className="mb-12 text-center"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">{benefitsTitle}</h2>
-          <p className="text-lg max-w-2xl mx-auto text-muted-foreground">{benefitsDescription}</p>
+          <h2 className="mb-4 text-3xl font-bold text-primary md:text-4xl">{benefitsTitle}</h2>
+          <p className="mx-auto max-w-2xl text-lg text-muted-foreground">{benefitsDescription}</p>
         </motion.div>
 
-        <div className="max-w-3xl mx-auto">
+        <div className="mx-auto max-w-3xl">
           <div className="space-y-6">
             {benefits.map((benefit, index) => (
               <motion.div
@@ -29,11 +29,11 @@ export function BenefitsSection() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="flex items-start bg-card rounded-lg p-5 shadow-sm border border-border"
+                className="flex items-start rounded-lg border border-border bg-card p-5 shadow-sm"
               >
-                <CheckCircle className="text-primary mr-4 mt-1 flex-shrink-0 h-6 w-6" />
+                <CheckCircle className="mr-4 mt-1 h-6 w-6 flex-shrink-0 text-primary" />
                 <div>
-                  <h3 className="font-semibold text-lg text-card-foreground">{benefit.title}</h3>
+                  <h3 className="text-lg font-semibold text-card-foreground">{benefit.title}</h3>
                   <p className="text-muted-foreground">{benefit.description}</p>
                 </div>
               </motion.div>
@@ -48,7 +48,12 @@ export function BenefitsSection() {
           transition={{ duration: 0.5, delay: 0.5 }}
           className="mt-16 flex justify-center"
         >
-          <svg className="w-full max-w-md" viewBox="0 0 500 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            className="w-full max-w-md"
+            viewBox="0 0 500 200"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <path
               d="M50 100C50 100 150 180 250 100C350 20 450 100 450 100"
               stroke="currentColor"

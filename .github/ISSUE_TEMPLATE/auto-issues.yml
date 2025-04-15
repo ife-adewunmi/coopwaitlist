@@ -1,0 +1,45 @@
+name: Automated Issue Creation
+
+on:
+  schedule:
+    # Run weekly on Monday at 9:00 AM
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+    # Allow manual triggering
+
+jobs:
+  create-weekly-planning-issue:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Create Weekly Planning Issue
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const today = new Date();
+            const nextSunday = new Date(today);
+            nextSunday.setDate(today.getDate() + (7 - today.getDay()));
+            
+            const startDate = today.toISOString().split('T')[0];
+            const endDate = nextSunday.toISOString().split('T')[0];
+            
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Weekly Planning: ${startDate} to ${endDate}`,
+              body: `## This Week's Objectives
+                1. [ ] Review open PRs
+                2. [ ] Address high-priority bugs
+                3. [ ] Plan next feature implementation
+
+                ## Discussion Points
+                - Current project roadmap status
+                - Resource allocation
+                - Blockers and challenges
+
+                ## Notes
+                - Add any relevant notes here`,
+              labels: ['planning']
+            });

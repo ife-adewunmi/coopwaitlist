@@ -1,29 +1,32 @@
-"use client"
-import { motion } from "framer-motion"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
-import { homeContent } from "@/data/home-content"
+'use client'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import { ArrowRight } from 'lucide-react'
+import { homeContent } from '@/data/home-content'
 
 export function HeroSection() {
   const { hero } = homeContent
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-primary-600 to-primary-700 py-20 md:py-28">
-      <div className="absolute inset-0 bg-grid-pattern-light bg-grid-8 [mask-image:linear-gradient(to_bottom,transparent,black)]" />
+      <div className="bg-grid-pattern-light bg-grid-8 absolute inset-0 [mask-image:linear-gradient(to_bottom,transparent,black)]" />
       <div className="container relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+        <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             className="text-white"
           >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
-              {hero.headline} <span className="text-accent">{hero.subheadline.split(" ").slice(0, 2).join(" ")}</span>
+            <h1 className="mb-4 text-4xl font-bold leading-tight md:text-5xl lg:text-6xl">
+              {hero.headline}{' '}
+              <span className="text-accent">
+                {hero.subheadline.split(' ').slice(0, 2).join(' ')}
+              </span>
             </h1>
-            <p className="text-lg md:text-xl mb-8 text-white/90 max-w-lg">{hero.subheadline}</p>
-            <div className="flex flex-wrap gap-4 mb-8">
+            <p className="mb-8 max-w-lg text-lg text-white/90 md:text-xl">{hero.subheadline}</p>
+            <div className="mb-8 flex flex-wrap gap-4">
               {hero.highlights.map((highlight, index) => (
                 <motion.div
                   key={highlight}
@@ -32,7 +35,7 @@ export function HeroSection() {
                   transition={{ delay: 0.1 * (index + 1), duration: 0.5 }}
                   className="flex items-center gap-2"
                 >
-                  <div className="w-3 h-3 rounded-full bg-accent"></div>
+                  <div className="h-3 w-3 rounded-full bg-accent"></div>
                   <span>{highlight}</span>
                 </motion.div>
               ))}
@@ -43,13 +46,18 @@ export function HeroSection() {
               transition={{ delay: 0.4, duration: 0.5 }}
               className="flex flex-wrap gap-4"
             >
-              <Button size="lg" asChild className="bg-accent hover:bg-accent-600 text-white">
+              <Button size="lg" asChild className="bg-accent text-white hover:bg-accent-600">
                 <Link href={hero.ctaUrl}>
                   {hero.ctaText}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10" asChild>
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-white text-white hover:bg-white/10"
+                asChild
+              >
                 <Link href={hero.secondaryCtaUrl}>{hero.secondaryCtaText}</Link>
               </Button>
             </motion.div>
@@ -60,15 +68,21 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="flex justify-center"
           >
-            <div className="relative w-full max-w-md aspect-square">
-              <div className="absolute inset-0 bg-white/10 rounded-full blur-3xl"></div>
+            <div className="relative aspect-square w-full max-w-md">
+              <div className="absolute inset-0 rounded-full bg-white/10 blur-3xl"></div>
               <svg
-                className="relative w-full z-10"
+                className="relative z-10 w-full"
                 viewBox="0 0 500 500"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <circle cx="250" cy="250" r="200" fill="currentColor" className="text-primary-foreground/10" />
+                <circle
+                  cx="250"
+                  cy="250"
+                  r="200"
+                  fill="currentColor"
+                  className="text-primary-foreground/10"
+                />
                 <path
                   d="M360 170C360 170 310 120 250 120C190 120 140 170 140 170"
                   stroke="currentColor"

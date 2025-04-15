@@ -1,14 +1,27 @@
-"use client"
+'use client'
 
-import { useState, useEffect } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Search, Filter, Eye } from "lucide-react"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { motion } from "framer-motion"
+import { useState, useEffect } from 'react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Search, Filter, Eye } from 'lucide-react'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { motion } from 'framer-motion'
 import {
   Dialog,
   DialogContent,
@@ -16,9 +29,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Registration } from "@/lib/types/registration"
-
+} from '@/components/ui/dialog'
+import { Registration } from '@/lib/types/registration'
 
 interface DataTableProps {
   registrations: Registration[]
@@ -26,11 +38,11 @@ interface DataTableProps {
 }
 
 export function DataTable({ registrations, isLoading }: DataTableProps) {
-  const [searchTerm, setSearchTerm] = useState("")
+  const [searchTerm, setSearchTerm] = useState('')
   const [filteredData, setFilteredData] = useState<Registration[]>([])
-  const [genderFilter, setGenderFilter] = useState<string>("")
-  const [ageFilter, setAgeFilter] = useState<string>("")
-  const [stateFilter, setStateFilter] = useState<string>("")
+  const [genderFilter, setGenderFilter] = useState<string>('')
+  const [ageFilter, setAgeFilter] = useState<string>('')
+  const [stateFilter, setStateFilter] = useState<string>('')
   const [selectedRegistration, setSelectedRegistration] = useState<Registration | null>(null)
 
   // Get unique states for filter
@@ -43,7 +55,7 @@ export function DataTable({ registrations, isLoading }: DataTableProps) {
     let filtered = [...registrations]
 
     // Apply search term filter
-    if (searchTerm.trim() !== "") {
+    if (searchTerm.trim() !== '') {
       filtered = filtered.filter(
         (reg) =>
           reg.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -55,17 +67,17 @@ export function DataTable({ registrations, isLoading }: DataTableProps) {
     }
 
     // Apply gender filter
-    if (genderFilter && genderFilter !== "all") {
+    if (genderFilter && genderFilter !== 'all') {
       filtered = filtered.filter((reg) => reg.gender === genderFilter)
     }
 
     // Apply age filter
-    if (ageFilter && ageFilter !== "all") {
+    if (ageFilter && ageFilter !== 'all') {
       filtered = filtered.filter((reg) => reg.ageBracket === ageFilter)
     }
 
     // Apply state filter
-    if (stateFilter && stateFilter !== "all") {
+    if (stateFilter && stateFilter !== 'all') {
       filtered = filtered.filter((reg) => reg.state === stateFilter)
     }
 
@@ -73,10 +85,10 @@ export function DataTable({ registrations, isLoading }: DataTableProps) {
   }, [searchTerm, registrations, genderFilter, ageFilter, stateFilter])
 
   const clearFilters = () => {
-    setSearchTerm("")
-    setGenderFilter("")
-    setAgeFilter("")
-    setStateFilter("")
+    setSearchTerm('')
+    setGenderFilter('')
+    setAgeFilter('')
+    setStateFilter('')
   }
 
   const viewDetails = (registration: Registration) => {
@@ -84,13 +96,17 @@ export function DataTable({ registrations, isLoading }: DataTableProps) {
   }
 
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <Card>
         <CardHeader>
           <CardTitle>Registration Data</CardTitle>
           <CardDescription>Complete list of waitlist registrations</CardDescription>
-          <div className="flex flex-col md:flex-row gap-4 mt-4">
-            <div className="flex w-full md:w-1/3 items-center space-x-2">
+          <div className="mt-4 flex flex-col gap-4 md:flex-row">
+            <div className="flex w-full items-center space-x-2 md:w-1/3">
               <Input
                 placeholder="Search by name, email, phone..."
                 value={searchTerm}
@@ -144,7 +160,7 @@ export function DataTable({ registrations, isLoading }: DataTableProps) {
               </Select>
 
               <Button variant="outline" size="sm" onClick={clearFilters} className="ml-auto">
-                <Filter className="h-4 w-4 mr-2" />
+                <Filter className="mr-2 h-4 w-4" />
                 Clear Filters
               </Button>
             </div>
@@ -169,10 +185,10 @@ export function DataTable({ registrations, isLoading }: DataTableProps) {
               <TableBody>
                 {isLoading ? (
                   <TableRow>
-                    <TableCell colSpan={9} className="text-center py-4">
+                    <TableCell colSpan={9} className="py-4 text-center">
                       <div className="flex justify-center">
                         <svg
-                          className="animate-spin h-5 w-5 text-primary"
+                          className="h-5 w-5 animate-spin text-primary"
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
@@ -196,7 +212,7 @@ export function DataTable({ registrations, isLoading }: DataTableProps) {
                   </TableRow>
                 ) : filteredData.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={9} className="text-center py-4">
+                    <TableCell colSpan={9} className="py-4 text-center">
                       No registrations found
                     </TableCell>
                   </TableRow>
@@ -209,29 +225,35 @@ export function DataTable({ registrations, isLoading }: DataTableProps) {
                       <TableCell>
                         <Badge
                           variant={
-                            reg.gender === "male" ? "default" : reg.gender === "female" ? "secondary" : "outline"
+                            reg.gender === 'male'
+                              ? 'default'
+                              : reg.gender === 'female'
+                                ? 'secondary'
+                                : 'outline'
                           }
                         >
-                          {reg.gender ? reg.gender.charAt(0).toUpperCase() + reg.gender.slice(1) : "N/A"}
+                          {reg.gender
+                            ? reg.gender.charAt(0).toUpperCase() + reg.gender.slice(1)
+                            : 'N/A'}
                         </Badge>
                       </TableCell>
-                      <TableCell>{reg.ageBracket || "N/A"}</TableCell>
+                      <TableCell>{reg.ageBracket || 'N/A'}</TableCell>
                       <TableCell>
                         {reg.city && reg.state
                           ? `${reg.city}, ${reg.state.charAt(0).toUpperCase() + reg.state.slice(1)}`
-                          : reg.city || reg.state || "N/A"}
+                          : reg.city || reg.state || 'N/A'}
                       </TableCell>
                       <TableCell>
                         {reg.financialGoal ? (
                           <Badge variant="outline">
-                            {reg.financialGoal === "business"
-                              ? "Business"
-                              : reg.financialGoal === "savings"
-                                ? "Savings"
-                                : "Education"}
+                            {reg.financialGoal === 'business'
+                              ? 'Business'
+                              : reg.financialGoal === 'savings'
+                                ? 'Savings'
+                                : 'Education'}
                           </Badge>
                         ) : (
-                          "N/A"
+                          'N/A'
                         )}
                       </TableCell>
                       <TableCell>{new Date(reg.registrationDate).toLocaleString()}</TableCell>
@@ -251,7 +273,9 @@ export function DataTable({ registrations, isLoading }: DataTableProps) {
                           <DialogContent className="max-w-md">
                             <DialogHeader>
                               <DialogTitle>Registration Details</DialogTitle>
-                              <DialogDescription>Complete information for {reg.name}</DialogDescription>
+                              <DialogDescription>
+                                Complete information for {reg.name}
+                              </DialogDescription>
                             </DialogHeader>
                             <div className="grid gap-4 py-4">
                               <div className="grid grid-cols-3 items-center gap-4">
@@ -285,52 +309,54 @@ export function DataTable({ registrations, isLoading }: DataTableProps) {
                                 <span className="col-span-2">{reg.occupation}</span>
                               </div>
 
-                              <div className="border-t pt-4 mt-2">
-                                <h4 className="font-semibold mb-2">Questionnaire Responses</h4>
+                              <div className="mt-2 border-t pt-4">
+                                <h4 className="mb-2 font-semibold">Questionnaire Responses</h4>
 
                                 <div className="grid grid-cols-3 items-center gap-4">
                                   <span className="font-medium">Financial Goal:</span>
                                   <span className="col-span-2">
-                                    {reg.financialGoal === "business"
-                                      ? "Starting or Scaling a Business"
-                                      : reg.financialGoal === "savings"
-                                        ? "Building Long-term Savings & Wealth"
-                                        : reg.financialGoal === "education"
-                                          ? "Gaining Financial Education & Investment Knowledge"
-                                          : "N/A"}
+                                    {reg.financialGoal === 'business'
+                                      ? 'Starting or Scaling a Business'
+                                      : reg.financialGoal === 'savings'
+                                        ? 'Building Long-term Savings & Wealth'
+                                        : reg.financialGoal === 'education'
+                                          ? 'Gaining Financial Education & Investment Knowledge'
+                                          : 'N/A'}
                                   </span>
                                 </div>
 
                                 <div className="grid grid-cols-3 items-center gap-4">
                                   <span className="font-medium">Current Focus:</span>
                                   <span className="col-span-2">
-                                    {reg.currentFocus === "savings"
-                                      ? "Savings & Investments"
-                                      : reg.currentFocus === "support"
-                                        ? "Mentorship & Support"
-                                        : reg.currentFocus === "opportunities"
-                                          ? "Strategic Opportunities"
-                                          : "N/A"}
+                                    {reg.currentFocus === 'savings'
+                                      ? 'Savings & Investments'
+                                      : reg.currentFocus === 'support'
+                                        ? 'Mentorship & Support'
+                                        : reg.currentFocus === 'opportunities'
+                                          ? 'Strategic Opportunities'
+                                          : 'N/A'}
                                   </span>
                                 </div>
 
                                 <div className="grid grid-cols-3 items-center gap-4">
                                   <span className="font-medium">Decision Value:</span>
                                   <span className="col-span-2">
-                                    {reg.decisionValue === "speed"
-                                      ? "Speed of Implementation"
-                                      : reg.decisionValue === "quality"
-                                        ? "High-quality Results"
-                                        : reg.decisionValue === "cost"
-                                          ? "Cost Effectiveness"
-                                          : "N/A"}
+                                    {reg.decisionValue === 'speed'
+                                      ? 'Speed of Implementation'
+                                      : reg.decisionValue === 'quality'
+                                        ? 'High-quality Results'
+                                        : reg.decisionValue === 'cost'
+                                          ? 'Cost Effectiveness'
+                                          : 'N/A'}
                                   </span>
                                 </div>
                               </div>
 
                               <div className="grid grid-cols-3 items-center gap-4">
                                 <span className="font-medium">Registered:</span>
-                                <span className="col-span-2">{new Date(reg.registrationDate).toLocaleString()}</span>
+                                <span className="col-span-2">
+                                  {new Date(reg.registrationDate).toLocaleString()}
+                                </span>
                               </div>
                             </div>
                           </DialogContent>

@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server"
-import { checkEncryption } from "@/lib/encryption"
+import { NextResponse } from 'next/server'
+import { checkEncryption } from '@/lib/encryption'
 
 export async function GET() {
   try {
@@ -10,11 +10,10 @@ export async function GET() {
       message: result.message,
     })
   } catch (error) {
-    console.error("Error in check-encryption API:", error)
+    console.error('Error in check-encryption API:', error)
     return NextResponse.json({
       encrypted: false,
-      message: `Error checking encryption: ${error instanceof Error ? error.message : "Unknown error"}`,
+      message: `Error checking encryption: ${error instanceof Error ? error.message : 'Unknown error'}`,
     })
   }
 }
-
