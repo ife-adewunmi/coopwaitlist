@@ -53,7 +53,7 @@ Coop Waitlist is a modern web application built with Next.js to manage and organ
 
 ## 📝 Contributing
 
-Please see our [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute to this project.
+Please see our [CONTRIBUTING.md](/.github/contributing/README.md) for guidelines on how to contribute to this project.
 
 ## 📄 License
 
