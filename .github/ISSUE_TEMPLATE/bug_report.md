@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: ''
+title: '[BUG] '
 labels: bug
 assignees: ''
 ---
@@ -34,6 +34,7 @@ If applicable, add screenshots to help explain your problem.
 - Device [e.g. Desktop, iPhone6]
 - Browser [e.g. chrome, safari]
 - Version [e.g. 22]
+- Device: [e.g. iPhone6, Desktop]
 
 **Additional context**
 Add any other context about the problem here.

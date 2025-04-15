@@ -15,7 +15,7 @@ export async function generateMagicLinkToken(email: string): Promise<string> {
 
   // Create a signature to prevent tampering
   const signature = crypto
-    .createHmac('sha256', process.env.ENCRYPTION_KEY || 'fallback-key')
+    .createHmac('sha256', process.env.ENCRYPTION_KEY || 'SampleEncriptionKey')
     .update(`${email}:${timestamp}:${randomBytes}`)
     .digest('hex')
 
@@ -47,7 +47,7 @@ export async function verifyMagicLinkToken(
 
     // Verify signature
     const expectedSignature = crypto
-      .createHmac('sha256', process.env.ENCRYPTION_KEY || 'fallback-key')
+      .createHmac('sha256', process.env.ENCRYPTION_KEY || 'SampleEncriptionKey')
       .update(`${decoded.email}:${decoded.timestamp}:${decoded.random}`)
       .digest('hex')
 

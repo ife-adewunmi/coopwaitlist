@@ -1,0 +1,45 @@
+name: Create Follow-up Issues from PRs
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [develop, main]
+
+jobs:
+  create-follow-up-issue:
+    if: github.event.pull_request.merged == true && contains(github.event.pull_request.body, '/create-issue')
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Create Follow-up Issue
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            // Extract issue details from PR body
+            const prBody = context.payload.pull_request.body;
+            const issueMatch = prBody.match(/\/create-issue\s+([\s\S]*?)(?:$|\/end-issue)/);
+            
+            if (issueMatch && issueMatch[1]) {
+              const issueContent = issueMatch[1].trim();
+              const titleMatch = issueContent.match(/title:(.*?)(?:\n|$)/);
+              const bodyMatch = issueContent.match(/body:([\s\S]*?)(?:labels:|$)/);
+              const labelsMatch = issueContent.match(/labels:(.*?)(?:\n|$)/);
+              
+              const title = titleMatch ? titleMatch[1].trim() : 'Follow-up from PR #' + context.payload.pull_request.number;
+              let body = bodyMatch ? bodyMatch[1].trim() : '';
+              
+              // Add reference to the original PR
+              body += `\n\n---\nCreated from Pull Request #${context.payload.pull_request.number}`;
+              
+              const labels = labelsMatch ? labelsMatch[1].split(',').map(l => l.trim()) : ['follow-up'];
+              
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: body,
+                labels: labels
+              });
+            }
