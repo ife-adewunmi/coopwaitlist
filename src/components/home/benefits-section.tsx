@@ -2,12 +2,17 @@
 import { motion } from 'framer-motion'
 import { CheckCircle } from 'lucide-react'
 import { homeContent } from '@/data/home-content'
+import { TestId } from '@/lib/test/test-ids'
 
-export function BenefitsSection() {
+export interface BenefitsSectionProps {
+  testId?: string
+}
+
+export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ testId }) => {
   const { benefitsTitle, benefitsDescription, benefits } = homeContent
 
   return (
-    <section id="benefits" className="bg-muted/50 py-20">
+    <section id="benefits" className="bg-muted/50 py-20" data-testid={testId || TestId.benefit}>
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

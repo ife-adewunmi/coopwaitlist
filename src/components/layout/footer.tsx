@@ -4,12 +4,17 @@ import { Shield, Mail, Phone, MapPin, ExternalLink } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { siteConfig, contactInfo, footerSections, socialLinks } from '@/data/site-config'
 import { Button } from '@/components/ui/button'
+import { TestId } from '@/src/lib/test/test-ids'
 
-export function Footer() {
+export interface FooterProps {
+  testId?: string
+}
+
+export const Footer: React.FC<FooterProps> = ({ testId }) => {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-primary-600 text-white">
+    <footer className="bg-primary-600 text-white" data-testid={testId || TestId.footer}>
       <div className="container mx-auto px-4 py-12">
         <div className="mb-8 grid grid-cols-1 gap-8 md:grid-cols-12">
           {/* Brand column */}
