@@ -14,4 +14,4 @@ jobs:
       - name: 'Dependency Review'
         uses: actions/dependency-review-action@23d1ffffb6fa5401173051ec21eba8c35242733f # tag=v2.1.0
         with:
-          license-check: false
+          allow-licenses-for: '@commitlint/cli, @commitlint/config-conventional, @storybook/react, @testing-library/jest-dom, @testing-library/react, @testing-library/user-event, @types/jest, husky, jest, jest-environment-jsdom, lint-staged, dotenv'
