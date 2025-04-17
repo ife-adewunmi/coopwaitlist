@@ -4,8 +4,13 @@ import type React from 'react'
 
 import { TrendingUp, Users, Lightbulb, Building } from 'lucide-react'
 import { homeContent } from '@/data/home-content'
+import { TestId } from '@/lib/test/test-ids'
 
-export function PurposeSection() {
+export interface PurposeSectionProps {
+  testId?: string
+}
+
+export const PurposeSection: React.FC<PurposeSectionProps> = ({ testId }) => {
   const { purposeTitle, purposeDescription, features } = homeContent
 
   const iconMap: Record<string, React.ReactNode> = {
@@ -16,7 +21,7 @@ export function PurposeSection() {
   }
 
   return (
-    <section id="features" className="py-20">
+    <section id="features" className="py-20" data-testid={testId || TestId.purpose}>
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -5,13 +5,18 @@ import { Button } from '@/components/ui/button'
 import { WaitlistFormModal } from './waitlist-form-modal'
 import { homeContent } from '@/data/home-content'
 import { ArrowRight } from 'lucide-react'
+import { TestId } from '@/src/lib/test/test-ids'
 
-export function WaitlistSection() {
+export interface WaitlistSectionProps {
+  testId?: string
+}
+
+export const WaitlistSection: React.FC<WaitlistSectionProps> = ({ testId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { waitlistTitle, waitlistDescription } = homeContent
 
   return (
-    <section id="waitlist" className="py-20">
+    <section id="waitlist" className="py-20" data-testid={testId || TestId.waitlist}>
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
