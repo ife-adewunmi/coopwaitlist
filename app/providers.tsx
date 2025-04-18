@@ -3,14 +3,17 @@
 import type React from 'react'
 
 import { Provider } from 'react-redux'
-import { store } from '@/state/store'
+import { store } from '@/states/store'
 import { ThemeProvider } from 'next-themes'
+import { WaitlistModalProvider } from '@/contexts/waitlist-modal-context'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <Provider store={store}>
       <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-        {children}
+        <WaitlistModalProvider>
+          {children}
+        </WaitlistModalProvider>
       </ThemeProvider>
     </Provider>
   )

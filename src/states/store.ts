@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { registrationsReducer } from '@/state/slices/registrations'
+import { registrationsReducer } from '@/states/slices/registrations'
 
 export const store = configureStore({
   reducer: {

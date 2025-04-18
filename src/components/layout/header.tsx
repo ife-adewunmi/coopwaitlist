@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { WaitlistButton } from '@/components/ui/waitlist-button'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Shield, Menu, X } from 'lucide-react'
 import { SimpleEncryptionStatus } from '@/components/security/simple-encryption-status'
@@ -74,9 +75,7 @@ export function Header({ title }: HeaderProps) {
           </Button>
 
           {/* Join waitlist button - desktop */}
-          <Button asChild className="hidden md:flex">
-            <Link href="#waitlist">Join Waitlist</Link>
-          </Button>
+          <WaitlistButton asLink className="hidden md:flex" />
         </div>
       </div>
 
@@ -119,11 +118,11 @@ export function Header({ title }: HeaderProps) {
               >
                 Contact
               </Link>
-              <Button asChild className="mt-2 w-full">
-                <Link href="#waitlist" onClick={() => setMobileMenuOpen(false)}>
-                  Join Waitlist
-                </Link>
-              </Button>
+              <WaitlistButton
+                asLink
+                className="mt-2 w-full"
+                onClick={() => setMobileMenuOpen(false)}
+              />
             </div>
           </motion.div>
         )}

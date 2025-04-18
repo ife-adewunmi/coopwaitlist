@@ -2,6 +2,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { WaitlistButton } from '@/components/ui/waitlist-button'
 import { ArrowRight } from 'lucide-react'
 import { homeContent } from '@/data/home-content'
 
@@ -46,12 +47,12 @@ export function HeroSection() {
               transition={{ delay: 0.4, duration: 0.5 }}
               className="flex flex-wrap gap-4"
             >
-              <Button size="lg" asChild className="bg-accent text-white hover:bg-accent-600">
-                <Link href={hero.ctaUrl}>
-                  {hero.ctaText}
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
+              <WaitlistButton
+                size="lg"
+                showArrow
+                text={hero.ctaText}
+                className="bg-accent text-white hover:bg-accent-600"
+              />
               <Button
                 size="lg"
                 variant="outline"
