@@ -1,7 +1,5 @@
 'use client'
 import { motion } from 'framer-motion'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
 import { WaitlistButton } from '@/components/ui/waitlist-button'
 import { ArrowRight } from 'lucide-react'
 import { homeContent } from '@/data/home-content'
@@ -53,14 +51,12 @@ export function HeroSection() {
                 text={hero.ctaText}
                 className="bg-accent text-white hover:bg-accent-600"
               />
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-white text-white hover:bg-white/10"
-                asChild
+              <a
+                className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border hover:text-accent-foreground h-11 rounded-md px-8 border-white text-white hover:bg-white/10"
+                href={typeof hero.secondaryCtaUrl === 'string' ? hero.secondaryCtaUrl : '#about'}
               >
-                <Link href={hero.secondaryCtaUrl}>{hero.secondaryCtaText}</Link>
-              </Button>
+                {hero.secondaryCtaText}
+              </a>
             </motion.div>
           </motion.div>
           <motion.div
