@@ -174,7 +174,7 @@ export function WaitlistForm() {
       }
 
       // Parse successful response
-      const responseData = await response.json()
+      await response.json()
 
       // Show questionnaire
       setShowQuestionnaire(true)

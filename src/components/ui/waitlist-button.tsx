@@ -28,9 +28,8 @@ export function WaitlistButton({
       <Button asChild className={className} {...props}>
         <Link
           href="#waitlist"
-          onClick={(e) => {
-            // Prevent default to avoid scrolling if that's not desired
-            // e.preventDefault()
+          onClick={() => {
+            // Open the modal when clicked
             openModal()
           }}
         >

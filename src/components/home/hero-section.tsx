@@ -1,7 +1,6 @@
 'use client'
 import { motion } from 'framer-motion'
 import { WaitlistButton } from '@/components/ui/waitlist-button'
-import { ArrowRight } from 'lucide-react'
 import { homeContent } from '@/data/home-content'
 
 export function HeroSection() {

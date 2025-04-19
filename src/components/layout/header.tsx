@@ -10,11 +10,7 @@ import { SimpleEncryptionStatus } from '@/components/security/simple-encryption-
 import { motion, AnimatePresence } from 'framer-motion'
 import { siteConfig } from '@/data/site-config'
 
-interface HeaderProps {
-  title: string
-}
-
-export function Header({ title }: HeaderProps) {
+export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const toggleMobileMenu = () => {
