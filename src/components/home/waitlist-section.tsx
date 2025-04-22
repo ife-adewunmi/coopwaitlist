@@ -7,7 +7,7 @@ export function WaitlistSection() {
   const { waitlistTitle, waitlistDescription } = homeContent
 
   return (
-    <section id="waitlist" className="py-20">
+    <section id="waitlist" className="py-20" data-testid={testId || TestId.waitlist}>
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

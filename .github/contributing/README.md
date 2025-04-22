@@ -24,9 +24,9 @@ When submitting an issue, please include:
 ### Pull Requests
 
 1. Fork the repository
-2. Create a new branch for your feature/fix (`git checkout -b feature/amazing-feature`)
+2. Create a new branch for your feature/fix (`git checkout -b feature/coop-[ISSUE NUMBER]-amazing-new-feature`)
 3. Commit your changes using conventional commit messages
-4. Push to your branch (`git push origin feature/amazing-feature`)
+4. Push to your branch (`git push origin feature/coop-[ISSUE NUMBER]-amazing-new-feature`)
 5. Open a Pull Request against the `develop` branch
 
 ### Commit Message Convention
