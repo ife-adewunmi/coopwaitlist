@@ -3,12 +3,20 @@ import { motion } from 'framer-motion'
 import { WaitlistButton } from '@/components/ui/waitlist-button'
 import { ArrowRight } from 'lucide-react'
 import { homeContent } from '@/data/home-content'
+import { TestId } from '@/lib/test/test-ids'
 
-export function HeroSection() {
+export interface HeroSectionProps {
+  testId?: string
+}
+
+export const HeroSection: React.FC<HeroSectionProps> = ({ testId }) => {
   const { hero } = homeContent
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-primary-600 to-primary-700 py-20 md:py-28">
+    <section
+      className="relative overflow-hidden bg-gradient-to-b from-primary-600 to-primary-700 py-20 md:py-28"
+      data-testid={testId || TestId.hero}
+    >
       <div className="bg-grid-pattern-light bg-grid-8 absolute inset-0 [mask-image:linear-gradient(to_bottom,transparent,black)]" />
       <div className="container relative z-10">
         <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2">
