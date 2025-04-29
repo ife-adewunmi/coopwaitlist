@@ -7,6 +7,7 @@ import { z } from 'zod'
 import { useDispatch } from 'react-redux'
 import { addRegistration } from '@/state/slices/registrations/registrationsSlice'
 import { useToast } from '@/hooks/use-toast'
+import { nigerianPhoneNumber } from '@/lib/validators/zod-validators'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Loader2, AlertCircle, Shield } from 'lucide-react'
@@ -85,8 +86,8 @@ const NIGERIAN_STATES = [
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
   email: z.string().email({ message: 'Please enter a valid email address.' }),
-  whatsapp: z.string().min(11, { message: 'Please enter a valid phone number.' }),
-  gender: z.enum(['male', 'female', 'other'], {
+  whatsapp: nigerianPhoneNumber(),
+  gender: z.enum(['male', 'female'], {
     required_error: 'Please select your gender.',
   }),
   ageBracket: z.string({ required_error: 'Please select your age bracket.' }),
@@ -291,7 +292,11 @@ export function WaitlistFormModal({ isOpen, onClose }: WaitlistFormModalProps) {
                       <FormItem>
                         <FormLabel>WhatsApp Number</FormLabel>
                         <FormControl>
-                          <Input type="tel" placeholder="Your WhatsApp number" {...field} />
+                          <Input
+                            type="tel"
+                            placeholder="e.g., 08012345678 or +2348012345678"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
