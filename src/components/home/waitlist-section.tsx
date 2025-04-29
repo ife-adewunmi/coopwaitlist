@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Button } from '@/components/ui/button'
+import { WaitlistButton } from '@/components/home/waitlist/waitlist-button'
 import { WaitlistFormModal } from './waitlist-form-modal'
 import { homeContent } from '@/data/home-content'
 import { ArrowRight } from 'lucide-react'
@@ -27,14 +27,13 @@ export const WaitlistSection: React.FC<WaitlistSectionProps> = ({ testId }) => {
         >
           <h2 className="mb-6 text-3xl font-bold text-primary md:text-4xl">{waitlistTitle}</h2>
           <p className="mb-8 text-lg text-muted-foreground">{waitlistDescription}</p>
-          <Button
+          <WaitlistButton
             size="lg"
+            label={'Join Our Waitlist'}
+            icon={<ArrowRight className="ml-2 h-4 w-4" />}
             onClick={() => setIsModalOpen(true)}
             className="bg-primary text-white hover:bg-primary-700"
-          >
-            Join Our Waitlist
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+          />
         </motion.div>
 
         <WaitlistFormModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />

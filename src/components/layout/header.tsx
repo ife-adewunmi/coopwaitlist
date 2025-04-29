@@ -77,11 +77,6 @@ export function Header({ title, testId }: HeaderProps) {
           >
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
-
-          {/* Join waitlist button - desktop */}
-          <Button asChild className="hidden md:flex">
-            <Link href="#waitlist">Join Waitlist</Link>
-          </Button>
         </div>
       </div>
 
@@ -124,11 +119,6 @@ export function Header({ title, testId }: HeaderProps) {
               >
                 Contact
               </Link>
-              <Button asChild className="mt-2 w-full">
-                <Link href="#waitlist" onClick={() => setMobileMenuOpen(false)}>
-                  Join Waitlist
-                </Link>
-              </Button>
             </div>
           </motion.div>
         )}

@@ -1,16 +1,20 @@
 'use client'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
 import { homeContent } from '@/data/home-content'
 import { TestId } from '@/lib/test/test-ids'
+import { WaitlistButton } from '@/components/home/waitlist/waitlist-button'
+import { WaitlistFormModal } from '@/components/home/waitlist-form-modal'
 
 export interface HeroSectionProps {
   testId?: string
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ testId }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const { hero } = homeContent
 
   return (
@@ -54,16 +58,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ testId }) => {
               transition={{ delay: 0.4, duration: 0.5 }}
               className="flex flex-wrap gap-4"
             >
-              <Button size="lg" asChild className="bg-accent text-white hover:bg-accent-600">
-                <Link href={hero.ctaUrl}>
-                  {hero.ctaText}
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
+              <WaitlistButton
+                size="lg"
+                label={hero.ctaText}
+                icon={<ArrowRight className="ml-2 h-4 w-4" />}
+                onClick={() => setIsModalOpen(true)}
+                className="bg-accent text-white hover:bg-accent-600"
+              />
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white text-white hover:bg-white/10"
+                className="bg-green border-white hover:bg-white/10"
                 asChild
               >
                 <Link href={hero.secondaryCtaUrl}>{hero.secondaryCtaText}</Link>
@@ -113,6 +118,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ testId }) => {
           </motion.div>
         </div>
       </div>
+
+      <WaitlistFormModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </section>
   )
 }
