@@ -322,12 +322,6 @@ export function WaitlistFormModal({ isOpen, onClose }: WaitlistFormModalProps) {
                               </FormControl>
                               <FormLabel className="font-normal">Female</FormLabel>
                             </FormItem>
-                            <FormItem className="flex items-center space-x-2 space-y-0">
-                              <FormControl>
-                                <RadioGroupItem value="other" />
-                              </FormControl>
-                              <FormLabel className="font-normal">Other</FormLabel>
-                            </FormItem>
                           </RadioGroup>
                         </FormControl>
                         <FormMessage />
