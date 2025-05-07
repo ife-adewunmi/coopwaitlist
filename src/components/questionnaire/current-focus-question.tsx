@@ -3,22 +3,25 @@
 import type React from 'react'
 
 import { motion } from 'framer-motion'
-import { useQuestionnaire } from './questionnaire-context'
-import { Building, Coins, BookOpen } from 'lucide-react'
+import { useDispatch, useSelector } from 'react-redux'
+import { TrendingUp, Users, Target } from 'lucide-react'
 import { questionnaireContent } from '@/data/questionnaire-content'
+import { updateAnswer } from '@/states/slices/waitlist/waitlistSlice'
+import type { RootState } from '@/states/store'
 
-export function FinancialGoalQuestion() {
-  const { answers, setAnswers } = useQuestionnaire()
-  const question = questionnaireContent.questions[0]
+export function CurrentFocusQuestion() {
+  const dispatch = useDispatch()
+  const answers = useSelector((state: RootState) => state.waitlist.answers)
+  const question = questionnaireContent.questions[1]
 
   const iconMap: Record<string, React.ReactNode> = {
-    building: <Building className="mb-2 h-6 w-6" />,
-    coins: <Coins className="mb-2 h-6 w-6" />,
-    'book-open': <BookOpen className="mb-2 h-6 w-6" />,
+    'trending-up': <TrendingUp className="mb-2 h-6 w-6" />,
+    users: <Users className="mb-2 h-6 w-6" />,
+    target: <Target className="mb-2 h-6 w-6" />,
   }
 
   const handleSelect = (value: string) => {
-    setAnswers({ ...answers, financialGoal: value })
+    dispatch(updateAnswer({ questionId: 'currentFocus', value }))
   }
 
   return (
@@ -40,14 +43,14 @@ export function FinancialGoalQuestion() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        {question.options.map((option, index) => (
+        {question.options?.map((option: any, index: number) => (
           <motion.div
             key={option.value}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 * (index + 1) }}
             className={`flex cursor-pointer flex-col items-center justify-center rounded-lg p-6 transition-all ${
-              answers.financialGoal === option.value
+              answers.currentFocus === option.value
                 ? 'scale-105 transform bg-primary text-white shadow-lg'
                 : 'bg-muted hover:bg-muted/80'
             } `}

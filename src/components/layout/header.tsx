@@ -8,12 +8,14 @@ import { Shield, Menu, X } from 'lucide-react'
 import { SimpleEncryptionStatus } from '@/components/security/simple-encryption-status'
 import { motion, AnimatePresence } from 'framer-motion'
 import { siteConfig } from '@/data/site-config'
+import { TestId } from '@/lib/test/test-ids'
 
 interface HeaderProps {
   title: string
+  testId?: string
 }
 
-export function Header({ title }: HeaderProps) {
+export function Header({ title, testId }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const toggleMobileMenu = () => {
@@ -21,7 +23,10 @@ export function Header({ title }: HeaderProps) {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header
+      className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      data-testid={testId || TestId.navigation.main}
+    >
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center gap-2">
@@ -72,11 +77,6 @@ export function Header({ title }: HeaderProps) {
           >
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
-
-          {/* Join waitlist button - desktop */}
-          <Button asChild className="hidden md:flex">
-            <Link href="#waitlist">Join Waitlist</Link>
-          </Button>
         </div>
       </div>
 
@@ -119,11 +119,6 @@ export function Header({ title }: HeaderProps) {
               >
                 Contact
               </Link>
-              <Button asChild className="mt-2 w-full">
-                <Link href="#waitlist" onClick={() => setMobileMenuOpen(false)}>
-                  Join Waitlist
-                </Link>
-              </Button>
             </div>
           </motion.div>
         )}

@@ -3,12 +3,15 @@
 import type React from 'react'
 
 import { motion } from 'framer-motion'
-import { useQuestionnaire } from './questionnaire-context'
+import { useDispatch, useSelector } from 'react-redux'
 import { Zap, Award, DollarSign } from 'lucide-react'
 import { questionnaireContent } from '@/data/questionnaire-content'
+import { updateAnswer } from '@/states/slices/waitlist/waitlistSlice'
+import type { RootState } from '@/states/store'
 
 export function DecisionValueQuestion() {
-  const { answers, setAnswers } = useQuestionnaire()
+  const dispatch = useDispatch()
+  const answers = useSelector((state: RootState) => state.waitlist.answers)
   const question = questionnaireContent.questions[2]
 
   const iconMap: Record<string, React.ReactNode> = {
@@ -18,7 +21,7 @@ export function DecisionValueQuestion() {
   }
 
   const handleSelect = (value: string) => {
-    setAnswers({ ...answers, decisionValue: value })
+    dispatch(updateAnswer({ questionId: 'decisionValue', value }))
   }
 
   return (
@@ -40,7 +43,7 @@ export function DecisionValueQuestion() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        {question.options.map((option, index) => (
+        {question.options?.map((option, index) => (
           <motion.div
             key={option.value}
             initial={{ opacity: 0, y: 20 }}
@@ -53,7 +56,7 @@ export function DecisionValueQuestion() {
             } `}
             onClick={() => handleSelect(option.value)}
           >
-            {iconMap[option.icon]}
+            {iconMap[option.icon as keyof typeof iconMap]}
             <h4 className="text-center font-medium">{option.label}</h4>
             {option.description && (
               <p className="mt-2 text-center text-xs opacity-80">{option.description}</p>

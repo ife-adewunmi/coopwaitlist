@@ -1,13 +1,20 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useDispatch } from 'react-redux'
 import { Button } from '@/components/ui/button'
 import { Check, Download } from 'lucide-react'
 import { questionnaireContent } from '@/data/questionnaire-content'
+import { closeModal } from '@/states/slices/modal/modalSlice'
 
 export function SuccessScreen() {
+  const dispatch = useDispatch()
   const { successTitle, successMessage, bonusTitle, bonusDescription, bonusButtonText } =
     questionnaireContent
+
+  const handleClose = () => {
+    dispatch(closeModal())
+  }
 
   return (
     <motion.div
@@ -55,6 +62,10 @@ export function SuccessScreen() {
           {bonusButtonText}
         </Button>
       </motion.div>
+
+      <Button onClick={handleClose} variant="outline" className="mt-4">
+        Close
+      </Button>
     </motion.div>
   )
 }

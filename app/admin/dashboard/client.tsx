@@ -9,24 +9,8 @@ import { ChartsSection } from '@/components/admin/charts-section'
 import { DataTable } from '@/components/admin/data-table'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { AlertCircle } from 'lucide-react'
-
-interface Registration {
-  name: string
-  email: string
-  emailIv?: string
-  whatsapp: string
-  whatsappIv?: string
-  gender: string
-  ageBracket: string
-  state: string
-  city: string
-  occupation: string
-  registrationDate: string
-  id?: string
-  financialGoal?: string
-  currentFocus?: string
-  decisionValue?: string
-}
+import { selectWaitlist } from '@/src/states/slices/waitlist/waitlistSelectors'
+import type { Registration } from '@/lib/types/registration'
 
 export default function AdminDashboardClient() {
   const [registrations, setRegistrations] = useState<Registration[]>([])
@@ -34,7 +18,7 @@ export default function AdminDashboardClient() {
   const [error, setError] = useState<string | null>(null)
 
   // Get registrations from Redux store
-  const storeRegistrations = useSelector((state: any) => state.registrations.registrations)
+  const storedData = useSelector(selectWaitlist)
 
   useEffect(() => {
     // Fetch registrations from API
@@ -67,12 +51,12 @@ export default function AdminDashboardClient() {
     fetchRegistrations()
   }, [])
 
-  useEffect(() => {
-    // Use data from Redux store if API fetch hasn't completed yet
-    if (isLoading && storeRegistrations.length > 0) {
-      setRegistrations(storeRegistrations)
-    }
-  }, [storeRegistrations, isLoading])
+  // useEffect(() => {
+  //   // Use data from Redux store if API fetch hasn't completed yet
+  //   if (isLoading && storedData. > 0) {
+  //     setRegistrations(storedData)
+  //   }
+  // }, [storedData, isLoading])
 
   // Function to refresh data
   const refreshData = async () => {

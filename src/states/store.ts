@@ -1,10 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { registrationsReducer } from '@/state/slices/registrations'
+import { modalReducer } from '@/states/slices/modal/modalSlice'
+import { toastReducer } from '@/states/slices/toast/toastSlice'
+import { waitlistReducer } from '@/states/slices/waitlist/waitlistSlice'
 
 export const store = configureStore({
   reducer: {
-    registrations: registrationsReducer,
+    modal: modalReducer,
+    waitlist: waitlistReducer,
+    toast: toastReducer,
   },
+  devTools: process.env.NODE_ENV !== 'production',
 })
 
 export type RootState = ReturnType<typeof store.getState>
