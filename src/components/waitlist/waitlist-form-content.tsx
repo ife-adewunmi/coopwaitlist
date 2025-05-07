@@ -4,7 +4,8 @@ import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
-import { Loader2 } from 'lucide-react'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Loader2, AlertCircle, Shield } from 'lucide-react'
 import { useToastRedux } from '@/hooks/use-toast-redux'
 import {
   selectIsSubmitting,
@@ -138,54 +139,80 @@ export const WaitlistFormContent = () => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {submissionError && (
-          <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
-            {submissionError}
-          </div>
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{submissionError}</AlertDescription>
+          </Alert>
         )}
 
-        <InputField name="name" label="Full Name" placeholder="Xample Tessy" form={form} />
-        <InputField
-          name="email"
-          label="Email Address"
-          placeholder="test@example.com"
-          type="email"
-          form={form}
-        />
-        <InputField name="whatsapp" label="WhatsApp Number" placeholder="08012345678" form={form} />
-        <RadioGroupField name="gender" label="Gender" form={form} />
-        <SelectField
-          name="ageBracket"
-          label="Age Bracket"
-          placeholder="Select your age bracket"
-          options={['18-24', '25-34', '35-44', '45-54', '55+']}
-          form={form}
-        />
-        <SelectField
-          name="state"
-          label="State"
-          placeholder="Select your state"
-          options={NIGERIAN_STATES}
-          capitalizeOptions
-          form={form}
-        />
-        <InputField name="city" label="City/Town" placeholder="Your city or town" form={form} />
-        <InputField
-          name="occupation"
-          label="Occupation"
-          placeholder="Your occupation"
-          form={form}
-        />
+        <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
+          <InputField name="name" label="Full Name" placeholder="Xample Tessy" form={form} />
+          <InputField
+            name="email"
+            label="Email Address"
+            placeholder="test@example.com"
+            type="email"
+            form={form}
+          />
+        </div>
 
-        <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Submitting...
-            </>
-          ) : (
-            'Continue to Questionnaire'
-          )}
-        </Button>
+        <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
+          <InputField
+            name="whatsapp"
+            label="WhatsApp Number"
+            placeholder="08012345678"
+            form={form}
+          />
+          <RadioGroupField name="gender" label="Gender" form={form} />
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
+          <SelectField
+            name="ageBracket"
+            label="Age Bracket"
+            placeholder="Select your age bracket"
+            options={['18-24', '25-34', '35-44', '45-54', '55+']}
+            form={form}
+          />
+          <SelectField
+            name="state"
+            label="State"
+            placeholder="Select your state"
+            options={NIGERIAN_STATES}
+            capitalizeOptions
+            form={form}
+          />
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
+          <InputField name="city" label="City/Town" placeholder="Your city or town" form={form} />
+          <InputField
+            name="occupation"
+            label="Occupation"
+            placeholder="Your occupation"
+            form={form}
+          />
+        </div>
+
+        <div className="pt-2 sm:pt-4">
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Submitting...
+              </>
+            ) : (
+              'Continue to Questionnaire'
+            )}
+          </Button>
+        </div>
+
+        <div className="mt-2 flex items-center justify-center gap-2 sm:mt-4">
+          <Shield className="h-4 w-4 text-muted-foreground" />
+          <p className="text-center text-xs text-muted-foreground">
+            Your data is encrypted and securely stored. We respect your privacy.
+          </p>
+        </div>
       </form>
     </Form>
   )

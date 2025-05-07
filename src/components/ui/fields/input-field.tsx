@@ -7,7 +7,7 @@ interface InputFieldProps {
   name: keyof WaitlistFormState
   label: string
   placeholder: string
-  form: any // Replace with the actual type of your form
+  form: any
   type?: string
 }
 
