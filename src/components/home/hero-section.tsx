@@ -1,20 +1,17 @@
 'use client'
-import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
 import { homeContent } from '@/data/home-content'
 import { TestId } from '@/lib/test/test-ids'
-import { WaitlistButton } from '@/components/home/waitlist/waitlist-button'
-import { WaitlistFormModal } from '@/components/home/waitlist-form-modal'
+import { WaitlistButton } from '@/src/components/waitlist/waitlist-button'
 
 export interface HeroSectionProps {
   testId?: string
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ testId }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false)
   const { hero } = homeContent
 
   return (
@@ -62,7 +59,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ testId }) => {
                 size="lg"
                 label={hero.ctaText}
                 icon={<ArrowRight className="ml-2 h-4 w-4" />}
-                onClick={() => setIsModalOpen(true)}
                 className="bg-accent text-white hover:bg-accent-600"
               />
               <Button
@@ -118,8 +114,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ testId }) => {
           </motion.div>
         </div>
       </div>
-
-      <WaitlistFormModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </section>
   )
 }

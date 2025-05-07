@@ -84,23 +84,20 @@ export function decryptData(encrypted: string, iv: string) {
     const encryptionKey = process.env.ENCRYPTION_KEY
 
     if (!encryptionKey) {
-      throw new Error('ENCRYPTION_KEY environment variable is not set')
+      throw new Error('EEncryption key not available')
     }
 
+    // Create encryption key from environment variable
     const encKey = crypto.scryptSync(encryptionKey, 'salt', 32)
+
+    // Decrypt the text
     const decipher = crypto.createDecipheriv('aes-256-cbc', encKey, Buffer.from(iv, 'hex'))
     let decrypted = decipher.update(encrypted, 'hex', 'utf8')
     decrypted += decipher.final('utf8')
 
-    return {
-      success: true,
-      decrypted,
-    }
+    return decrypted
   } catch (error) {
     console.error('Decryption error:', error)
-    return {
-      success: false,
-      error: `Failed to decrypt: ${error instanceof Error ? error.message : 'Unknown error'}`,
-    }
+    return '[Encrypted]'
   }
 }

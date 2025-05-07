@@ -1,23 +1,22 @@
 import type React from 'react'
-import { Providers } from './providers'
+import { RootProvider } from '@/providers/root-provider'
 import { Toaster } from '@/components/ui/toaster'
 import { openSans } from './fonts'
 import './globals.css'
 
 export const metadata = {
-  title: 'Financial Growth Cooperative - Waitlist',
-  description: 'Join our waitlist for the Financial Growth Cooperative',
-  generator: 'v0.dev',
+  title: 'Coop - Join our waitlist',
+  description: 'Coop is building a cooperative banking platform for Africans',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={openSans.variable} suppressHydrationWarning>
       <body>
-        <Providers>
+        <RootProvider>
           {children}
           <Toaster />
-        </Providers>
+        </RootProvider>
       </body>
     </html>
   )

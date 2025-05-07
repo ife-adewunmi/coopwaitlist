@@ -26,7 +26,8 @@
       "@/data/*": ["./src/data/*"],
       "@/hooks/*": ["./src/hooks/*"],
       "@/lib/*": ["./src/lib/*"],
-      "@/state/*": ["./src/states/*"],
+      "@/providers/*": ["./src/providers/*"],
+      "@/states/*": ["./src/states/*"],
       "@/styles/*": ["./src/styles/*"]
     }
   },

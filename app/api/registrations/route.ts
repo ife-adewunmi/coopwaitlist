@@ -4,106 +4,18 @@ import path from 'path'
 import crypto from 'crypto'
 import { sendWelcomeEmail } from '@/lib/email'
 import { Registration } from '@/lib/types/registration'
+import { getRegistrationId } from '@/lib/utils'
+import { checkRateLimit } from '@/lib/rate-limiter'
+import { decryptData, encryptData } from '@/lib/encryption'
 
-// Path to the JSON file
 const dataFilePath = path.join(process.cwd(), 'src/data', 'registrations.json')
 
-// Ensure the data directory exists
-const ensureDirectoryExists = (filePath: string) => {
-  const dirname = path.dirname(filePath)
-  if (!fs.existsSync(dirname)) {
-    try {
-      fs.mkdirSync(dirname, { recursive: true })
-    } catch (error) {
-      console.error('Error creating directory:', error)
-      throw new Error(`Failed to create directory: ${dirname}`)
-    }
-  }
-}
-
-// Encrypt sensitive data
-const encryptData = (text: string) => {
-  try {
-    // Use the environment variable for encryption
-    const encryptionKey = process.env.ENCRYPTION_KEY
-
-    if (!encryptionKey) {
-      console.error('ENCRYPTION_KEY environment variable is not set')
-      throw new Error('Encryption key not available')
-    }
-
-    // Create encryption key from environment variable
-    const encKey = crypto.scryptSync(encryptionKey, 'salt', 32)
-    const iv = crypto.randomBytes(16)
-
-    // Encrypt the text
-    const cipher = crypto.createCipheriv('aes-256-cbc', encKey, iv)
-    let encrypted = cipher.update(text, 'utf8', 'hex')
-    encrypted += cipher.final('hex')
-
-    return { encrypted, iv: iv.toString('hex') }
-  } catch (error) {
-    console.error('Encryption error:', error)
-    throw new Error(
-      `Failed to encrypt data: ${error instanceof Error ? error.message : 'Unknown error'}`,
-    )
-  }
-}
-
-// Decrypt sensitive data
-const decryptData = (encrypted: string, iv: string) => {
-  try {
-    // Use the environment variable for decryption
-    const encryptionKey = process.env.ENCRYPTION_KEY
-
-    if (!encryptionKey) {
-      console.error('ENCRYPTION_KEY environment variable is not set')
-      throw new Error('Encryption key not available')
-    }
-
-    // Create encryption key from environment variable
-    const encKey = crypto.scryptSync(encryptionKey, 'salt', 32)
-
-    // Decrypt the text
-    const decipher = crypto.createDecipheriv('aes-256-cbc', encKey, Buffer.from(iv, 'hex'))
-    let decrypted = decipher.update(encrypted, 'hex', 'utf8')
-    decrypted += decipher.final('utf8')
-
-    return decrypted
-  } catch (error) {
-    console.error('Decryption error:', error)
-    return '[Encrypted]' // Return a placeholder for encrypted data
-  }
-}
-
-// Rate limiting
-const RATE_LIMIT_WINDOW = 60 * 1000 // 1 minute
-const MAX_REQUESTS_PER_WINDOW = 10
-const ipRequests: Record<string, { count: number; resetTime: number }> = {}
-
-// Check rate limit
-const checkRateLimit = (ip: string) => {
-  const now = Date.now()
-
-  // Initialize or reset if window has passed
-  if (!ipRequests[ip] || now > ipRequests[ip].resetTime) {
-    ipRequests[ip] = {
-      count: 0,
-      resetTime: now + RATE_LIMIT_WINDOW,
-    }
-  }
-
-  // Increment count
-  ipRequests[ip].count++
-
-  // Check if over limit
-  return ipRequests[ip].count <= MAX_REQUESTS_PER_WINDOW
-}
-
-// Check if email already exists in registrations
-const emailExists = (registrations: any[], email: string) => {
-  // For each registration, decrypt the email and compare
+export const emailExists = (registrations: any[], email: string, excludeId?: string) => {
   return registrations.some((reg) => {
+    if (excludeId && reg.id === excludeId) {
+      return false
+    }
+
     if (reg.email && reg.emailIv) {
       try {
         const decryptedEmail = decryptData(reg.email, reg.emailIv)
@@ -117,14 +29,47 @@ const emailExists = (registrations: any[], email: string) => {
   })
 }
 
+export function ensureDirectoryExists() {
+  const dirname = path.dirname(dataFilePath)
+  if (!fs.existsSync(dirname)) {
+    try {
+      fs.mkdirSync(dirname, { recursive: true })
+    } catch (error) {
+      console.error('Error creating directory:', error)
+      throw new Error(`Failed to create directory: ${dirname}`)
+    }
+  }
+}
+
+export function readRegistrations() {
+  try {
+    ensureDirectoryExists()
+    if (!fs.existsSync(dataFilePath)) {
+      fs.writeFileSync(dataFilePath, JSON.stringify([]))
+      return []
+    }
+    const fileContents = fs.readFileSync(dataFilePath, 'utf8')
+    return JSON.parse(fileContents)
+  } catch (error) {
+    console.error('Error reading registrations:', error)
+    return NextResponse.json({ error: 'Failed to read registration data' }, { status: 500 })
+  }
+}
+
+export function writeRegistrations(registrations: any[]) {
+  try {
+    ensureDirectoryExists()
+    fs.writeFileSync(dataFilePath, JSON.stringify(registrations, null, 2))
+  } catch (error) {
+    console.error('Error writing registrations:', error)
+    throw new Error('Failed to save registration data')
+  }
+}
+
 // Get all registrations
 export async function GET(request: Request) {
   try {
-    console.log(dataFilePath)
-    // Get client IP for rate limiting
     const ip = request.headers.get('x-forwarded-for') || 'unknown'
-
-    // Check rate limit
     if (!checkRateLimit(ip)) {
       return NextResponse.json(
         { error: 'Too many requests, please try again later' },
@@ -132,65 +77,24 @@ export async function GET(request: Request) {
       )
     }
 
-    try {
-      ensureDirectoryExists(dataFilePath)
-    } catch (error) {
-      console.error('Directory creation error:', error)
-      return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
-    }
+    const registrations = readRegistrations()
 
-    // Check if file exists, if not create it with empty array
-    if (!fs.existsSync(dataFilePath)) {
-      try {
-        fs.writeFileSync(dataFilePath, JSON.stringify([]))
-      } catch (error) {
-        console.error('Error creating file:', error)
-        return NextResponse.json({ error: 'Failed to initialize data storage' }, { status: 500 })
-      }
-      return NextResponse.json([])
-    }
-
-    // Read the file
-    let fileContents
-    try {
-      fileContents = fs.readFileSync(dataFilePath, 'utf8')
-    } catch (error) {
-      console.error('Error reading file:', error)
-      return NextResponse.json({ error: 'Failed to read registration data' }, { status: 500 })
-    }
-
-    // Parse JSON
-    let registrations
-    try {
-      registrations = JSON.parse(fileContents)
-    } catch (error) {
-      console.error('Error parsing JSON:', error)
-      return NextResponse.json({ error: 'Data format error' }, { status: 500 })
-    }
-
-    // Decrypt sensitive data before sending to client
     const decryptedRegistrations = registrations.map((reg: any) => {
-      try {
-        // Only decrypt if the data is in encrypted format
-        const decryptedReg = { ...reg }
+      const decryptedReg = { ...reg }
 
-        if (reg.email && reg.emailIv) {
-          decryptedReg.email = decryptData(reg.email, reg.emailIv)
-          // Remove the IV from the response
-          delete decryptedReg.emailIv
-        }
-
-        if (reg.whatsapp && reg.whatsappIv) {
-          decryptedReg.whatsapp = decryptData(reg.whatsapp, reg.whatsappIv)
-          // Remove the IV from the response
-          delete decryptedReg.whatsappIv
-        }
-
-        return decryptedReg
-      } catch (error) {
-        console.error('Error decrypting registration:', error)
-        return reg
+      // Decrypt email if it exists
+      if (reg.email && reg.emailIv) {
+        decryptedReg.email = decryptData(reg.email, reg.emailIv)
+        delete decryptedReg.emailIv
       }
+
+      // Decrypt whatsapp if it exists
+      if (reg.whatsapp && reg.whatsappIv) {
+        decryptedReg.whatsapp = decryptData(reg.whatsapp, reg.whatsappIv)
+        delete decryptedReg.whatsappIv
+      }
+
+      return decryptedReg
     })
 
     return NextResponse.json(decryptedRegistrations)
@@ -200,13 +104,10 @@ export async function GET(request: Request) {
   }
 }
 
-// Add a new registration
+// Add a new registration with optional questionnaire answers
 export async function POST(request: Request) {
   try {
-    // Get client IP for rate limiting
     const ip = request.headers.get('x-forwarded-for') || 'unknown'
-
-    // Check rate limit
     if (!checkRateLimit(ip)) {
       return NextResponse.json(
         { error: 'Too many requests, please try again later' },
@@ -214,117 +115,180 @@ export async function POST(request: Request) {
       )
     }
 
-    // Check CSRF token
     const csrfToken = request.headers.get('x-csrf-token')
     if (!csrfToken) {
       return NextResponse.json({ error: 'CSRF token missing' }, { status: 403 })
     }
 
-    // Parse request body
-    let registration: Registration
-    try {
-      registration = await request.json()
-    } catch (error) {
-      console.error('Error parsing request body:', error)
-      return NextResponse.json({ error: 'Invalid request format' }, { status: 400 })
-    }
-
-    // Validate the registration data
-    if (
-      !registration.name ||
-      !registration.email ||
-      !registration.whatsapp ||
-      !registration.gender ||
-      !registration.ageBracket ||
-      !registration.state ||
-      !registration.city ||
-      !registration.occupation
-    ) {
+    const data = await request.json()
+    if (!data.name || !data.email) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    try {
-      ensureDirectoryExists(dataFilePath)
-    } catch (error) {
-      console.error('Directory creation error:', error)
-      return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
+    const registrations = readRegistrations()
+    if (emailExists(registrations, data.email)) {
+      return NextResponse.json({ error: 'This email is already registered' }, { status: 409 })
     }
 
-    // Read existing registrations or create empty array
-    let registrations = []
-    if (fs.existsSync(dataFilePath)) {
-      try {
-        const fileContents = fs.readFileSync(dataFilePath, 'utf8')
-        registrations = JSON.parse(fileContents)
-      } catch (error) {
-        console.error('Error reading or parsing existing data:', error)
-        return NextResponse.json({ error: 'Failed to read existing data' }, { status: 500 })
-      }
-    }
-
-    // Check if email already exists
-    if (emailExists(registrations, registration.email)) {
-      return NextResponse.json(
-        { error: 'This email is already registered' },
-        { status: 409 }, // 409 Conflict
-      )
+    // Extract registration base data
+    const registrationBase = {
+      id: data.id || getRegistrationId(),
+      name: data.name,
+      email: data.email,
+      whatsapp: data.whatsapp || '',
+      gender: data.gender,
+      ageBracket: data.ageBracket,
+      state: data.state,
+      city: data.city,
+      occupation: data.occupation,
+      createdAt: new Date().toISOString(),
     }
 
     // Encrypt sensitive data
-    let encryptedEmail, emailIv, encryptedWhatsapp, whatsappIv
-    try {
-      const emailResult = encryptData(registration.email)
-      encryptedEmail = emailResult.encrypted
-      emailIv = emailResult.iv
+    const emailResult = encryptData(data.email)
+    const whatsappResult = encryptData(data.whatsapp || '')
 
-      const whatsappResult = encryptData(registration.whatsapp)
-      encryptedWhatsapp = whatsappResult.encrypted
-      whatsappIv = whatsappResult.iv
-    } catch (error) {
-      console.error('Encryption error:', error)
-      return NextResponse.json({ error: 'Failed to encrypt sensitive data' }, { status: 500 })
-    }
-
-    // Add the new registration with a unique ID and encrypted data
+    // Create registration object with encrypted data
     const newRegistration = {
-      ...registration,
-      email: encryptedEmail,
-      emailIv: emailIv,
-      whatsapp: encryptedWhatsapp,
-      whatsappIv: whatsappIv,
-      id: `reg_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
-      registrationDate: registration.registrationDate || new Date().toISOString(),
+      ...registrationBase,
+      email: emailResult.encrypted,
+      emailIv: emailResult.iv,
+      whatsapp: whatsappResult.encrypted,
+      whatsappIv: whatsappResult.iv,
     }
+
+    // Add questionnaire answers if they exist
+    const questionnaireFields = [
+      'financialGoal',
+      'currentFocus',
+      'decisionValue',
+      'investmentInterest',
+      'riskTolerance',
+      'timeHorizon',
+    ]
+
+    questionnaireFields.forEach((field) => {
+      if (field in data) {
+        ;(newRegistration as any)[field] = data[field]
+      }
+    })
 
     registrations.push(newRegistration)
+    writeRegistrations(registrations)
 
-    // Write back to the file
     try {
-      fs.writeFileSync(dataFilePath, JSON.stringify(registrations, null, 2))
-    } catch (error) {
-      console.error('Error writing to file:', error)
-      return NextResponse.json({ error: 'Failed to save registration data' }, { status: 500 })
-    }
-
-    // Send welcome email
-    try {
-      await sendWelcomeEmail(registration.name, registration.email)
+      await sendWelcomeEmail(data.name, data.email)
     } catch (emailError) {
       console.error('Error sending welcome email:', emailError)
-      // Continue even if email fails
     }
 
     return NextResponse.json({
       success: true,
-      message: 'Registration added successfully',
+      message: 'Registration completed successfully',
+      id: newRegistration.id,
     })
   } catch (error) {
     console.error('Error adding registration:', error)
     return NextResponse.json(
       {
-        error:
-          'Failed to add registration: ' +
-          (error instanceof Error ? error.message : 'Unknown error'),
+        error: `Failed to add registration: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      },
+      { status: 500 },
+    )
+  }
+}
+
+// Update an existing registration
+export async function PATCH(request: Request) {
+  try {
+    const ip = request.headers.get('x-forwarded-for') || 'unknown'
+    if (!checkRateLimit(ip)) {
+      return NextResponse.json(
+        { error: 'Too many requests, please try again later' },
+        { status: 429 },
+      )
+    }
+
+    const csrfToken = request.headers.get('x-csrf-token')
+    if (!csrfToken) {
+      return NextResponse.json({ error: 'CSRF token missing' }, { status: 403 })
+    }
+
+    const updateData = await request.json()
+    const { id, ...dataToUpdate } = updateData
+
+    if (!id || typeof id !== 'string' || id.trim() === '') {
+      return NextResponse.json({ error: 'Invalid or missing registration ID' }, { status: 400 })
+    }
+
+    const registrations = readRegistrations()
+    const registrationIndex = registrations.findIndex((reg: any) => reg.id === id)
+    if (registrationIndex === -1) {
+      return NextResponse.json({ error: 'Registration not found' }, { status: 404 })
+    }
+
+    const existingRegistration = registrations[registrationIndex]
+
+    // Check for email uniqueness if updating email
+    if (
+      dataToUpdate.email &&
+      dataToUpdate.email !== decryptData(existingRegistration.email, existingRegistration.emailIv)
+    ) {
+      if (emailExists(registrations, dataToUpdate.email, id)) {
+        return NextResponse.json({ error: 'This email is already registered' }, { status: 409 })
+      }
+    }
+
+    const updatedRegistration = { ...existingRegistration }
+
+    // Update and encrypt sensitive fields if present
+    if (dataToUpdate.email) {
+      const emailResult = encryptData(dataToUpdate.email)
+      updatedRegistration.email = emailResult.encrypted
+      updatedRegistration.emailIv = emailResult.iv
+    }
+
+    if (dataToUpdate.whatsapp) {
+      const whatsappResult = encryptData(dataToUpdate.whatsapp)
+      updatedRegistration.whatsapp = whatsappResult.encrypted
+      updatedRegistration.whatsappIv = whatsappResult.iv
+    }
+
+    // Update all other applicable fields
+    const fieldsToUpdate = [
+      'name',
+      'gender',
+      'ageBracket',
+      'state',
+      'city',
+      'occupation',
+      'financialGoal',
+      'currentFocus',
+      'decisionValue',
+      'investmentInterest',
+      'riskTolerance',
+      'timeHorizon',
+    ]
+
+    fieldsToUpdate.forEach((field) => {
+      if (field in dataToUpdate) {
+        updatedRegistration[field] = dataToUpdate[field]
+      }
+    })
+
+    updatedRegistration.lastUpdated = new Date().toISOString()
+    registrations[registrationIndex] = updatedRegistration
+    writeRegistrations(registrations)
+
+    return NextResponse.json({
+      success: true,
+      message: 'Registration updated successfully',
+    })
+  } catch (error) {
+    console.error('Error updating registration:', error)
+    return NextResponse.json(
+      {
+        error: `Failed to update registration: ${error instanceof Error ? error.message : 'Unknown error'}`,
       },
       { status: 500 },
     )

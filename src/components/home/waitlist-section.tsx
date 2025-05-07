@@ -1,42 +1,47 @@
 'use client'
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { WaitlistButton } from '@/components/home/waitlist/waitlist-button'
-import { WaitlistFormModal } from './waitlist-form-modal'
-import { homeContent } from '@/data/home-content'
-import { ArrowRight } from 'lucide-react'
-import { TestId } from '@/src/lib/test/test-ids'
 
-export interface WaitlistSectionProps {
+import { ArrowRight } from 'lucide-react'
+import { TestId } from '@/lib/test/test-ids'
+import { motion } from 'framer-motion'
+import { homeContent } from '@/data/home-content'
+import { WaitlistButton } from '../waitlist/waitlist-button'
+
+interface WaitlistSectionProps {
+  className?: string
   testId?: string
 }
 
-export const WaitlistSection: React.FC<WaitlistSectionProps> = ({ testId }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false)
+export function WaitlistSection({ className, testId }: WaitlistSectionProps) {
   const { waitlistTitle, waitlistDescription } = homeContent
 
   return (
-    <section id="waitlist" className="py-20" data-testid={testId || TestId.waitlist}>
-      <div className="container">
+    <section
+      id="waitlist"
+      className={`py-16 ${className || ''}`}
+      data-testid={testId || TestId.waitlist}
+    >
+      <div className="container mx-auto px-4 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="mx-auto max-w-3xl text-center"
+          className="mx-auto max-w-3xl"
         >
-          <h2 className="mb-6 text-3xl font-bold text-primary md:text-4xl">{waitlistTitle}</h2>
-          <p className="mb-8 text-lg text-muted-foreground">{waitlistDescription}</p>
-          <WaitlistButton
-            size="lg"
-            label={'Join Our Waitlist'}
-            icon={<ArrowRight className="ml-2 h-4 w-4" />}
-            onClick={() => setIsModalOpen(true)}
-            className="bg-primary text-white hover:bg-primary-700"
-          />
-        </motion.div>
+          <h2 className="mb-8 text-4xl font-bold text-primary lg:text-5xl">{waitlistTitle}</h2>
+          <p className="mx-auto mb-12 max-w-2xl text-lg text-muted-foreground">
+            {waitlistDescription}
+          </p>
 
-        <WaitlistFormModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+          <div className="flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-x-6 sm:space-y-0">
+            <WaitlistButton
+              size="lg"
+              label={'Join Our Waitlist'}
+              icon={<ArrowRight className="ml-2 h-4 w-4" />}
+              className="bg-primary text-white hover:bg-primary-700"
+            />
+          </div>
+        </motion.div>
       </div>
     </section>
   )

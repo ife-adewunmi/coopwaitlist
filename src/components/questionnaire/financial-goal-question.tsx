@@ -3,22 +3,25 @@
 import type React from 'react'
 
 import { motion } from 'framer-motion'
-import { useQuestionnaire } from './questionnaire-context'
-import { TrendingUp, Users, Target } from 'lucide-react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Building, Coins, BookOpen } from 'lucide-react'
 import { questionnaireContent } from '@/data/questionnaire-content'
+import { updateAnswer } from '@/states/slices/waitlist/waitlistSlice'
+import type { RootState } from '@/states/store'
 
-export function CurrentFocusQuestion() {
-  const { answers, setAnswers } = useQuestionnaire()
-  const question = questionnaireContent.questions[1]
+export function FinancialGoalQuestion() {
+  const dispatch = useDispatch()
+  const answers = useSelector((state: RootState) => state.waitlist.answers)
+  const question = questionnaireContent.questions[0]
 
   const iconMap: Record<string, React.ReactNode> = {
-    'trending-up': <TrendingUp className="mb-2 h-6 w-6" />,
-    users: <Users className="mb-2 h-6 w-6" />,
-    target: <Target className="mb-2 h-6 w-6" />,
+    building: <Building className="mb-2 h-6 w-6" />,
+    coins: <Coins className="mb-2 h-6 w-6" />,
+    'book-open': <BookOpen className="mb-2 h-6 w-6" />,
   }
 
   const handleSelect = (value: string) => {
-    setAnswers({ ...answers, currentFocus: value })
+    dispatch(updateAnswer({ questionId: 'financialGoal', value }))
   }
 
   return (
@@ -40,20 +43,20 @@ export function CurrentFocusQuestion() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        {question.options.map((option: any, index: number) => (
+        {question.options?.map((option, index) => (
           <motion.div
             key={option.value}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 * (index + 1) }}
             className={`flex cursor-pointer flex-col items-center justify-center rounded-lg p-6 transition-all ${
-              answers.currentFocus === option.value
+              answers.financialGoal === option.value
                 ? 'scale-105 transform bg-primary text-white shadow-lg'
                 : 'bg-muted hover:bg-muted/80'
             } `}
             onClick={() => handleSelect(option.value)}
           >
-            {iconMap[option.icon]}
+            {iconMap[option.icon as keyof typeof iconMap]}
             <h4 className="text-center font-medium">{option.label}</h4>
             {option.description && (
               <p className="mt-2 text-center text-xs opacity-80">{option.description}</p>

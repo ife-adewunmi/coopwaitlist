@@ -2,9 +2,9 @@ export interface RegistrationBase {
   id?: string
   name: string
   email: string
-  emailIv?: string
+  // emailIv?: string
   whatsapp: string
-  whatsappIv?: string
+  // whatsappIv?: string
   gender: string
   ageBracket: string
   state: string
@@ -22,4 +22,6 @@ export interface RegistrationQuestions {
   timeHorizon?: string
 }
 
-export type Registration = RegistrationBase & RegistrationQuestions
+export interface Registration extends RegistrationBase, RegistrationQuestions {
+  [key: string]: string | string[] | undefined
+}
