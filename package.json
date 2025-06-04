@@ -13,7 +13,14 @@
     "prepare": "husky || true",
     "test": "jest",
     "lint-staged": "lint-staged",
-    "commitlint": "commitlint"
+    "commitlint": "commitlint",
+    "db:generate": "drizzle-kit generate --config=src/database/drizzle.config.ts",
+    "db:migrate": "tsx src/database/scripts/migrate.ts",
+    "db:seed": "tsx src/database/seeds/index.ts",
+    "db:setup": "tsx src/database/scripts/setup.ts",
+    "db:studio": "drizzle-kit studio --config=src/database/drizzle.config.ts",
+    "db:push": "drizzle-kit push --config=src/database/drizzle.config.ts",
+    "db:reset": "tsx -e \"import { clearDatabase } from './src/database/seeds/index.js'; clearDatabase().then(() => process.exit(0)).catch(() => process.exit(1))\""
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
