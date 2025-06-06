@@ -20,10 +20,13 @@ export const emailExists = async (email: string, excludeId?: string) => {
       if (reg.email && reg.emailIv) {
         try {
           const decryptedEmail = decryptData(reg.email, reg.emailIv)
-          return decryptedEmail.toLowerCase() === email.toLowerCase()
+          // Only compare if decryption was successful (not '[Encrypted]')
+          if (decryptedEmail !== '[Encrypted]') {
+            return decryptedEmail.toLowerCase() === email.toLowerCase()
+          }
         } catch (error) {
           console.error('Error decrypting email for comparison:', error)
-          return false
+          // If decryption fails, skip this record for comparison
         }
       }
       return false
