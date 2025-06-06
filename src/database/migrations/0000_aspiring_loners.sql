@@ -1,0 +1,22 @@
+CREATE TABLE "registrations" (
+	"id" varchar(50) PRIMARY KEY NOT NULL,
+	"name" varchar(255) NOT NULL,
+	"email" text NOT NULL,
+	"email_iv" varchar(32),
+	"whatsapp" text NOT NULL,
+	"whatsapp_iv" varchar(32),
+	"gender" varchar(10) NOT NULL,
+	"age_bracket" varchar(20) NOT NULL,
+	"state" varchar(50) NOT NULL,
+	"city" varchar(100) NOT NULL,
+	"occupation" varchar(100) NOT NULL,
+	"registration_date" timestamp NOT NULL,
+	"financial_goal" text,
+	"current_focus" text,
+	"decision_value" text,
+	"investment_interest" text,
+	"risk_tolerance" varchar(50),
+	"time_horizon" varchar(50),
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL
+);
