@@ -1,7 +1,11 @@
 'use client'
 
 import { useDispatch } from 'react-redux'
-import { FullScreenModal, FullScreenModalContent } from '@/components/ui/full-screen-modal'
+import {
+  FullScreenModal,
+  FullScreenModalContent,
+  FullScreenModalTitle
+} from '@/components/ui/full-screen-modal'
 import { Questionnaire } from './questionnaire'
 import { closeModal } from '@/states/slices/modal/modalSlice'
 import { setComplete } from '@/states/slices/waitlist/waitlistSlice'
@@ -29,6 +33,9 @@ export function QuestionnaireModal({ isOpen, onClose, data }: QuestionnaireModal
   return (
     <FullScreenModal open={isOpen} onOpenChange={handleClose}>
       <FullScreenModalContent className="flex items-center justify-center">
+        <FullScreenModalTitle className="sr-only">
+          Investment Questionnaire
+        </FullScreenModalTitle>
         <div className="w-full max-w-4xl p-6">
           <Questionnaire onComplete={handleQuestionnaireComplete} />
         </div>

@@ -1,68 +1,46 @@
 import { NextResponse } from 'next/server'
-import fs from 'fs'
-import path from 'path'
-import crypto from 'crypto'
 import { sendWelcomeEmail } from '@/lib/email'
 import { Registration } from '@/lib/types/registration'
 import { getRegistrationId } from '@/lib/utils'
 import { checkRateLimit } from '@/lib/rate-limiter'
 import { decryptData, encryptData } from '@/lib/encryption'
+import { db } from '@/src/database'
+import { registrations } from '@/src/database/schema/registrations'
+import { eq } from 'drizzle-orm'
 
-const dataFilePath = path.join(process.cwd(), 'src/data', 'registrations.json')
+export const emailExists = async (email: string, excludeId?: string) => {
+  try {
+    const allRegistrations = await db.select().from(registrations)
 
-export const emailExists = (registrations: any[], email: string, excludeId?: string) => {
-  return registrations.some((reg) => {
-    if (excludeId && reg.id === excludeId) {
-      return false
-    }
-
-    if (reg.email && reg.emailIv) {
-      try {
-        const decryptedEmail = decryptData(reg.email, reg.emailIv)
-        return decryptedEmail.toLowerCase() === email.toLowerCase()
-      } catch (error) {
-        console.error('Error decrypting email for comparison:', error)
+    return allRegistrations.some((reg) => {
+      if (excludeId && reg.id === excludeId) {
         return false
       }
-    }
+
+      if (reg.email && reg.emailIv) {
+        try {
+          const decryptedEmail = decryptData(reg.email, reg.emailIv)
+          return decryptedEmail.toLowerCase() === email.toLowerCase()
+        } catch (error) {
+          console.error('Error decrypting email for comparison:', error)
+          return false
+        }
+      }
+      return false
+    })
+  } catch (error) {
+    console.error('Error checking email existence:', error)
     return false
-  })
-}
-
-export function ensureDirectoryExists() {
-  const dirname = path.dirname(dataFilePath)
-  if (!fs.existsSync(dirname)) {
-    try {
-      fs.mkdirSync(dirname, { recursive: true })
-    } catch (error) {
-      console.error('Error creating directory:', error)
-      throw new Error(`Failed to create directory: ${dirname}`)
-    }
   }
 }
 
-export function readRegistrations() {
+// Database functions to replace file operations
+export async function readRegistrations() {
   try {
-    ensureDirectoryExists()
-    if (!fs.existsSync(dataFilePath)) {
-      fs.writeFileSync(dataFilePath, JSON.stringify([]))
-      return []
-    }
-    const fileContents = fs.readFileSync(dataFilePath, 'utf8')
-    return JSON.parse(fileContents)
+    return await db.select().from(registrations)
   } catch (error) {
-    console.error('Error reading registrations:', error)
-    return NextResponse.json({ error: 'Failed to read registration data' }, { status: 500 })
-  }
-}
-
-export function writeRegistrations(registrations: any[]) {
-  try {
-    ensureDirectoryExists()
-    fs.writeFileSync(dataFilePath, JSON.stringify(registrations, null, 2))
-  } catch (error) {
-    console.error('Error writing registrations:', error)
-    throw new Error('Failed to save registration data')
+    console.error('Error reading registrations from database:', error)
+    throw new Error('Failed to read registration data')
   }
 }
 
@@ -77,9 +55,9 @@ export async function GET(request: Request) {
       )
     }
 
-    const registrations = readRegistrations()
+    const registrationsData = await readRegistrations()
 
-    const decryptedRegistrations = registrations.map((reg: any) => {
+    const decryptedRegistrations = registrationsData.map((reg: any) => {
       const decryptedReg = { ...reg }
 
       // Decrypt email if it exists
@@ -125,56 +103,46 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    const registrations = readRegistrations()
-    if (emailExists(registrations, data.email)) {
+    // Check if email already exists
+    if (await emailExists(data.email)) {
       return NextResponse.json({ error: 'This email is already registered' }, { status: 409 })
-    }
-
-    // Extract registration base data
-    const registrationBase = {
-      id: data.id || getRegistrationId(),
-      name: data.name,
-      email: data.email,
-      whatsapp: data.whatsapp || '',
-      gender: data.gender,
-      ageBracket: data.ageBracket,
-      state: data.state,
-      city: data.city,
-      occupation: data.occupation,
-      createdAt: new Date().toISOString(),
     }
 
     // Encrypt sensitive data
     const emailResult = encryptData(data.email)
     const whatsappResult = encryptData(data.whatsapp || '')
 
-    // Create registration object with encrypted data
-    const newRegistration = {
-      ...registrationBase,
-      email: emailResult.encrypted,
-      emailIv: emailResult.iv,
-      whatsapp: whatsappResult.encrypted,
-      whatsappIv: whatsappResult.iv,
+    // Check if encryption was successful
+    if (!emailResult.success || !whatsappResult.success) {
+      console.error('Encryption failed:', emailResult.error || whatsappResult.error)
+      return NextResponse.json({ error: 'Encryption failed. Please check server configuration.' }, { status: 500 })
     }
 
-    // Add questionnaire answers if they exist
-    const questionnaireFields = [
-      'financialGoal',
-      'currentFocus',
-      'decisionValue',
-      'investmentInterest',
-      'riskTolerance',
-      'timeHorizon',
-    ]
+    // Create registration object with encrypted data
+    const newRegistration = {
+      id: data.id || getRegistrationId(),
+      name: data.name,
+      email: emailResult.encrypted!,
+      emailIv: emailResult.iv!,
+      whatsapp: whatsappResult.encrypted!,
+      whatsappIv: whatsappResult.iv!,
+      gender: data.gender,
+      ageBracket: data.ageBracket || '',
+      state: data.state,
+      city: data.city,
+      occupation: data.occupation,
+      registrationDate: new Date(),
+      // Questionnaire fields
+      financialGoal: data.financialGoal || null,
+      currentFocus: data.currentFocus || null,
+      decisionValue: data.decisionValue || null,
+      investmentInterest: data.investmentInterest ? JSON.stringify(data.investmentInterest) : null,
+      riskTolerance: data.riskTolerance || null,
+      timeHorizon: data.timeHorizon || null,
+    }
 
-    questionnaireFields.forEach((field) => {
-      if (field in data) {
-        ;(newRegistration as any)[field] = data[field]
-      }
-    })
-
-    registrations.push(newRegistration)
-    writeRegistrations(registrations)
+    // Save to database
+    await db.insert(registrations).values(newRegistration)
 
     try {
       await sendWelcomeEmail(data.name, data.email)
@@ -221,37 +189,39 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: 'Invalid or missing registration ID' }, { status: 400 })
     }
 
-    const registrations = readRegistrations()
-    const registrationIndex = registrations.findIndex((reg: any) => reg.id === id)
-    if (registrationIndex === -1) {
+    // Find existing registration
+    const existingRegistrations = await db.select().from(registrations).where(eq(registrations.id, id))
+    if (existingRegistrations.length === 0) {
       return NextResponse.json({ error: 'Registration not found' }, { status: 404 })
     }
 
-    const existingRegistration = registrations[registrationIndex]
+    const existingRegistration = existingRegistrations[0]
 
     // Check for email uniqueness if updating email
     if (
       dataToUpdate.email &&
+      existingRegistration.emailIv &&
       dataToUpdate.email !== decryptData(existingRegistration.email, existingRegistration.emailIv)
     ) {
-      if (emailExists(registrations, dataToUpdate.email, id)) {
+      if (await emailExists(dataToUpdate.email, id)) {
         return NextResponse.json({ error: 'This email is already registered' }, { status: 409 })
       }
     }
 
-    const updatedRegistration = { ...existingRegistration }
+    // Prepare update data
+    const updateFields: any = {}
 
     // Update and encrypt sensitive fields if present
     if (dataToUpdate.email) {
       const emailResult = encryptData(dataToUpdate.email)
-      updatedRegistration.email = emailResult.encrypted
-      updatedRegistration.emailIv = emailResult.iv
+      updateFields.email = emailResult.encrypted
+      updateFields.emailIv = emailResult.iv
     }
 
     if (dataToUpdate.whatsapp) {
       const whatsappResult = encryptData(dataToUpdate.whatsapp)
-      updatedRegistration.whatsapp = whatsappResult.encrypted
-      updatedRegistration.whatsappIv = whatsappResult.iv
+      updateFields.whatsapp = whatsappResult.encrypted
+      updateFields.whatsappIv = whatsappResult.iv
     }
 
     // Update all other applicable fields
@@ -272,13 +242,14 @@ export async function PATCH(request: Request) {
 
     fieldsToUpdate.forEach((field) => {
       if (field in dataToUpdate) {
-        updatedRegistration[field] = dataToUpdate[field]
+        updateFields[field] = dataToUpdate[field]
       }
     })
 
-    updatedRegistration.lastUpdated = new Date().toISOString()
-    registrations[registrationIndex] = updatedRegistration
-    writeRegistrations(registrations)
+    updateFields.updatedAt = new Date()
+
+    // Update in database
+    await db.update(registrations).set(updateFields).where(eq(registrations.id, id))
 
     return NextResponse.json({
       success: true,
